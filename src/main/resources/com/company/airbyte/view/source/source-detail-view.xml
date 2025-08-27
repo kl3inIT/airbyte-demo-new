@@ -51,6 +51,9 @@
                       placeholder="msg://sourceDetailView.descriptionPlaceholder"
                       maxLength="200"/>
         </formLayout>
+        <vbox id="sourceDetailVbox">
+
+        </vbox>
         <hbox id="detailActions">
             <button id="closeButton" action="closeAction" text="msg://sourceDetailView.cancel"/>
             <button id="saveAndCloseButton" action="saveAction" text="msg://sourceDetailView.save"/>

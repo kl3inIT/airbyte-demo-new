@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fragment xmlns="http://jmix.io/schema/flowui/fragment">
+    <data>
+        <instance id="sourceDc"
+                  class="com.company.airbyte.dto.source.SourceDatabaseDTO">
+            <loader id="sourceDl"/>
+        </instance>
+
+    </data>
+    <content>
+        <vbox id="root">
+            <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDc" height="100%">
+                <comboBox property="databaseType"/>
+                <textField property="database" />
+                <textField property="host" />
+                <textField property="port"/>
+                <textField property="username"/>
+                <passwordField property="password"/>
+
+            </formLayout>
+        </vbox>
+    </content>
+</fragment>
