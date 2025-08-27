@@ -3,6 +3,7 @@
 
     <menu id="application" title="msg://com.company.airbyte/menu.application.title" opened="true">
         <item view="User.list" title="msg://com.company.airbyte.view.user/UserListView.title"/>
+        <item view="Source.list" title="msg://com.company.airbyte.view.source/sourceListView.title"/>
     </menu>
 
 </menu-config>

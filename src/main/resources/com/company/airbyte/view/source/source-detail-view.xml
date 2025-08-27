@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://sourceDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="sourceDc"
+                  class="com.company.airbyte.entity.Source">
+            <fetchPlan extends="_base"/>
+            <loader id="sourceDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="sourceDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <!-- Tên nguồn dữ liệu -->
+            <textField id="nameField"
+                       property="name"
+                       label="msg://sourceDetailView.nameLabel"
+                       placeholder="msg://sourceDetailView.namePlaceholder"
+                       required="true"
+                       requiredMessage="msg://sourceDetailView.nameRequired"/>
+
+            <!-- Loại nguồn -->
+            <select id="sourceTypeField"
+                    property="sourceType"
+                    label="msg://sourceDetailView.sourceTypeLabel"
+                    placeholder="msg://sourceDetailView.sourceTypePlaceholder"
+                    required="true"/>
+
+            <!-- Đơn vị gửi / quản lý nguồn -->
+            <select id="providerUnitField"
+                    property="providerUnit"
+                    label="msg://sourceDetailView.providerUnitLabel"
+                    placeholder="msg://sourceDetailView.providerUnitPlaceholder"
+                    required="true"/>
+
+            <!-- Mô tả nguồn -->
+            <textArea id="descriptionField"
+                      property="description"
+                      label="msg://sourceDetailView.descriptionLabel"
+                      placeholder="msg://sourceDetailView.descriptionPlaceholder"
+                      maxLength="200"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="closeButton" action="closeAction" text="msg://sourceDetailView.cancel"/>
+            <button id="saveAndCloseButton" action="saveAction" text="msg://sourceDetailView.save"/>
+        </hbox>
+    </layout>
+</view>
