@@ -1,25 +1,29 @@
 package com.company.airbyte.dto.source.mssql;
 
 import com.company.airbyte.dto.source.SourceDTO;
+import io.jmix.core.metamodel.annotation.JmixEntity;
 
+@JmixEntity
 public class SourceMssqlDTO extends SourceDTO {
 
-    private String host;
-    private Long port;
+    private String sslMethod;
 
-    public String getHost() {
-        return host;
+    private String replicationMethod;
+
+    public SourceMssqlSSLMethod getSslMethod() {
+        return sslMethod == null ? null : SourceMssqlSSLMethod.fromId(sslMethod);
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setSslMethod(SourceMssqlSSLMethod sslMethod) {
+        this.sslMethod = sslMethod == null ? null : sslMethod.getId();
     }
 
-    public Long getPort() {
-        return port;
+    public SourceMssqlUpdateMethod getReplicationMethod() {
+        return replicationMethod == null ? null : SourceMssqlUpdateMethod.fromId(replicationMethod);
     }
 
-    public void setPort(Long port) {
-        this.port = port;
+    public void setReplicationMethod(SourceMssqlUpdateMethod replicationMethod) {
+        this.replicationMethod = replicationMethod == null ? null : replicationMethod.getId();
     }
+
 }

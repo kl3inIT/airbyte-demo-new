@@ -5,19 +5,118 @@
                   class="com.company.airbyte.dto.source.SourceDatabaseDTO">
             <loader id="sourceDl"/>
         </instance>
+        <instance id="postgresDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresDTO">
+        </instance>
+        <instance id="mssqlDc" class="com.company.airbyte.dto.source.mssql.SourceMssqlDTO">
+        </instance>
 
     </data>
+
     <content>
-        <vbox id="root">
-            <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDc" height="100%">
-                <comboBox property="databaseType"/>
-                <textField property="database" />
-                <textField property="host" />
-                <textField property="port"/>
-                <textField property="username"/>
-                <passwordField property="password"/>
+        <vbox id="root" width="100%" padding="true">
+            <h3 text="msg://sourceDatabaseFragment.title">
+            </h3>
+            <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDc" width="100%">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+                <comboBox property="databaseType"
+                          label="msg://sourceDatabaseFragment.databaseTypeLabel"
+                          placeholder="msg://sourceDatabaseFragment.databaseTypePlaceholder"
+                          required="true"
+                          requiredMessage="msg://sourceDatabaseFragment.databaseTypeRequired"/>
+
+                <textField property="database"
+                           label="msg://sourceDatabaseFragment.databaseLabel"
+                           placeholder="msg://sourceDatabaseFragment.databasePlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceDatabaseFragment.databaseRequired"/>
+
+                <textField property="host"
+                           label="msg://sourceDatabaseFragment.hostLabel"
+                           placeholder="msg://sourceDatabaseFragment.hostPlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceDatabaseFragment.hostRequired"/>
+
+                <textField property="port"
+                           label="msg://sourceDatabaseFragment.portLabel"
+                           placeholder="msg://sourceDatabaseFragment.portPlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceDatabaseFragment.portRequired"/>
+
+                <textField property="schemas"
+                           label="msg://sourceDatabaseFragment.schemaLabel"
+                           placeholder="msg://sourceDatabaseFragment.schemaPlaceholder"/>
+
+                <textField property="username"
+                           label="msg://sourceDatabaseFragment.usernameLabel"
+                           placeholder="msg://sourceDatabaseFragment.usernamePlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceDatabaseFragment.usernameRequired"/>
+
+                <passwordField property="password"
+                               label="msg://sourceDatabaseFragment.passwordLabel"
+                               placeholder="msg://sourceDatabaseFragment.passwordPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceDatabaseFragment.passwordRequired"/>
+
+                <comboBox property="tunnelMethod"
+                          label="msg://sourceDatabaseFragment.sshLabel"
+                          placeholder="msg://sourceDatabaseFragment.sshPlaceholder"
+                          required="true"
+                          requiredMessage="msg://sourceDatabaseFragment.sshRequired"/>
+
+                <textField property="jdbcUrlParams"
+                           label="msg://sourceDatabaseFragment.jdbcLabel"
+                           placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"/>
 
             </formLayout>
+            <vbox id="specificFieldsContainer" width="100%" spacing="true">
+                <!-- Postgres specific fields -->
+                <formLayout id="postgresForm" dataContainer="postgresDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+
+                    <comboBox id="postgresSslModeComboBox"
+                              property="sslMode"
+                              label="msg://sourceDatabaseFragment.sslLabel"
+                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
+                              required="true"
+                              requiredMessage="msg://sourceDatabaseFragment.sslRequired"/>
+
+                    <comboBox id="postgresReplicationMethodComboBox"
+                              property="replicationMethod"
+                              label="msg://sourceDatabaseFragment.replicationLabel"
+                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
+                              required="true"
+                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                </formLayout>
+
+                <!-- MSSQL specific fields -->
+                <formLayout id="mssqlForm" dataContainer="mssqlDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+
+                    <comboBox id="mssqlSslMethodComboBox"
+                              property="sslMethod"
+                              label="msg://sourceDatabaseFragment.sslLabel"
+                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
+                              required="true"
+                              requiredMessage="msg://sourceDatabaseFragment.sslRequired"/>
+
+                    <comboBox id="mssqlReplicationMethodComboBox"
+                              property="replicationMethod"
+                              label="msg://sourceDatabaseFragment.replicationLabel"
+                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
+                              required="true"
+                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                </formLayout>
+            </vbox>
         </vbox>
     </content>
 </fragment>

@@ -10,8 +10,7 @@ public enum SourcePostgresSSLModes implements EnumClass<String> {
     PREFER("prefer"),
     REQUIRE("require"),
     VERIFY_CA("verify-ca"),
-    VERIFY_FULL("verify-full")
-    ;
+    VERIFY_FULL("verify-full");
 
     private final String id;
 

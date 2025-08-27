@@ -7,6 +7,7 @@ import org.springframework.lang.Nullable;
 
 public enum ProviderUnit implements EnumClass<String> {
 
+    EQUIPMENT_DEPARTMENT("EQUIPMENT_DEPARTMENT"),
     MILITARY_PERSONNEL("MILITARY_PERSONNEL"),
     ENGINEERING("ENGINEERING"),
     POLITICAL_DEPARTMENT("POLITICAL_DEPARTMENT"),
