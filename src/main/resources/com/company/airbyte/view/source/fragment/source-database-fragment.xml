@@ -16,6 +16,9 @@
         <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
         </instance>
 
+        <instance id="postgresCdcDc" class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
+        </instance>
+
     </data>
 
     <content>
@@ -151,11 +154,94 @@
                               property="sslMode"
                               label="msg://sourceDatabaseFragment.sslLabel"
                               placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
+                    <!-- Postgres SSL Certificate Form (chung cho cả verify-ca và verify-full) -->
+                    <formLayout id="postgresVerifyForm" dataContainer="postgresVerifyDc" width="100%" visible="false">
+                        <responsiveSteps>
+                            <responsiveStep minWidth="0" columns="1"/>
+                        </responsiveSteps>
+
+                        <h4 text="msg://sourceDatabaseFragment.sslCertificateTitle"/>
+
+                        <textArea property="caCertificate"
+                                  label="msg://sourceDatabaseFragment.caCertificateLabel"
+                                  placeholder="msg://sourceDatabaseFragment.caCertificatePlaceholder"
+                                  required="true"
+                                  requiredMessage="msg://sourceDatabaseFragment.caCertificateRequired"
+                                  height="150px"
+                                  width="100%"/>
+
+                        <textArea id="clientCertificateField"
+                                  property="clientCertificate"
+                                  label="msg://sourceDatabaseFragment.clientCertificateLabel"
+                                  placeholder="msg://sourceDatabaseFragment.clientCertificatePlaceholder"
+                                  height="150px"
+                                  width="100%"/>
+
+                        <textArea id="clientKeyField"
+                                  property="clientKey"
+                                  label="msg://sourceDatabaseFragment.clientKeyLabel"
+                                  placeholder="msg://sourceDatabaseFragment.clientKeyPlaceholder"
+                                  height="150px"
+                                  width="100%"/>
+
+                        <passwordField id="clientKeyPasswordField"
+                                       property="clientKeyPassword"
+                                       label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
+                                       placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"/>
+                    </formLayout>
 
                     <comboBox id="postgresReplicationMethodComboBox"
                               property="replicationMethod"
                               label="msg://sourceDatabaseFragment.replicationLabel"
                               placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"/>
+                    <!-- Postgres CDC Form -->
+                    <formLayout id="postgresCdcForm" dataContainer="postgresCdcDc" width="100%" visible="false">
+                        <responsiveSteps>
+                            <responsiveStep minWidth="0" columns="1"/>
+                            <responsiveStep minWidth="40em" columns="2"/>
+                        </responsiveSteps>
+
+                        <h4 text="msg://sourceDatabaseFragment.cdcConfigurationTitle"/>
+
+                        <textField property="replicationSlot"
+                                   label="msg://sourceDatabaseFragment.replicationSlotLabel"
+                                   placeholder="msg://sourceDatabaseFragment.replicationSlotPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.replicationSlotRequired"/>
+
+                        <textField property="publication"
+                                   label="msg://sourceDatabaseFragment.publicationLabel"
+                                   placeholder="msg://sourceDatabaseFragment.publicationPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.publicationRequired"/>
+
+                        <textField property="initialWaitingSeconds"
+                                   label="msg://sourceDatabaseFragment.initialWaitingSecondsLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialWaitingSecondsPlaceholder"/>
+
+                        <textField property="queueSize"
+                                   label="msg://sourceDatabaseFragment.queueSizeLabel"
+                                   placeholder="msg://sourceDatabaseFragment.queueSizePlaceholder"/>
+
+                        <comboBox property="lsnCommitBehaviour"
+                                  label="msg://sourceDatabaseFragment.lsnCommitBehaviourLabel"
+                                  placeholder="msg://sourceDatabaseFragment.lsnCommitBehaviourPlaceholder"/>
+
+                        <textField property="heartbeatActionQuery"
+                                   label="msg://sourceDatabaseFragment.heartbeatActionQueryLabel"
+                                   placeholder="msg://sourceDatabaseFragment.heartbeatActionQueryPlaceholder"/>
+
+                        <comboBox property="invalidCdcCursorPositionBehavior"
+                                  label="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorLabel"
+                                  placeholder="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorPlaceholder"/>
+
+                        <textField property="initialLoadTimeoutHours"
+                                   label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"/>
+
+
+                    </formLayout>
+
                 </formLayout>
 
                 <!-- MSSQL specific fields -->
@@ -164,12 +250,12 @@
                         <responsiveStep minWidth="0" columns="1"/>
                         <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
-
+                    <vbox>
                     <comboBox id="mssqlSslMethodComboBox"
                               property="sslMethod"
                               label="msg://sourceDatabaseFragment.sslLabel"
                               placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
-
+                    </vbox>
                     <comboBox id="mssqlReplicationMethodComboBox"
                               property="replicationMethod"
                               label="msg://sourceDatabaseFragment.replicationLabel"
@@ -178,41 +264,7 @@
                               requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
                 </formLayout>
 
-                <!-- Postgres SSL Certificate Form (chung cho cả verify-ca và verify-full) -->
-                <formLayout id="postgresVerifyForm" dataContainer="postgresVerifyDc" width="100%" visible="false">
-                    <responsiveSteps>
-                        <responsiveStep minWidth="0" columns="1"/>
-                    </responsiveSteps>
 
-                    <h4 text="msg://sourceDatabaseFragment.sslCertificateTitle"/>
-
-                    <textArea property="caCertificate"
-                              label="msg://sourceDatabaseFragment.caCertificateLabel"
-                              placeholder="msg://sourceDatabaseFragment.caCertificatePlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.caCertificateRequired"
-                              height="150px"
-                              width="100%"/>
-                    >
-                    <textArea id="clientCertificateField"
-                              property="clientCertificate"
-                              label="msg://sourceDatabaseFragment.clientCertificateLabel"
-                              placeholder="msg://sourceDatabaseFragment.clientCertificatePlaceholder"
-                              height="150px"
-                              width="100%"/>
-
-                    <textArea id="clientKeyField"
-                              property="clientKey"
-                              label="msg://sourceDatabaseFragment.clientKeyLabel"
-                              placeholder="msg://sourceDatabaseFragment.clientKeyPlaceholder"
-                              height="150px"
-                              width="100%"/>
-
-                    <passwordField id="clientKeyPasswordField"
-                                   property="clientKeyPassword"
-                                   label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
-                                   placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"/>
-                </formLayout>
             </vbox>
             <textField property="jdbcUrlParams"
                        label="msg://sourceDatabaseFragment.jdbcLabel"
