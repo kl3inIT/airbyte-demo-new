@@ -2,6 +2,8 @@ package com.company.airbyte.view.source;
 
 import com.company.airbyte.dto.source.SourceDTO;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
+import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
+import com.company.airbyte.entity.DatabaseType;
 import com.company.airbyte.entity.Source;
 import com.company.airbyte.entity.SourceType;
 import com.company.airbyte.view.main.MainView;
@@ -57,6 +59,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
             switch (requestedType) {
                 case DATABASE: {
                     SourceDatabaseDTO sourceDatabaseDTO = metadata.create(SourceDatabaseDTO.class);
+                    sourceDatabaseDTO.setDatabaseType(DatabaseType.POSTGRES);
+                    sourceDatabaseDTO.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL);
                     source.setConfiguration(sourceDatabaseDTO);
                     break;
                 }

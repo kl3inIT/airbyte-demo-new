@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
     <data>
-        <instance id="sourceDc"
-                  class="com.company.airbyte.dto.source.SourceDatabaseDTO">
-            <loader id="sourceDl"/>
+        <instance id="sourceDatabaseDc"
+                  class="com.company.airbyte.dto.source.SourceDatabaseDTO" provided="true">
+
         </instance>
         <instance id="postgresDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresDTO">
         </instance>
@@ -13,14 +13,16 @@
         </instance>
         <instance id="sshKeyAuthDc" class="com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO">
         </instance>
+        <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
+        </instance>
 
     </data>
 
     <content>
-        <vbox id="root" width="100%" padding="false" spacing="false" margin="false">
+        <vbox id="root" width="100%" padding="false">
             <h3 text="msg://sourceDatabaseFragment.title">
             </h3>
-            <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDc" width="100%">
+            <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDatabaseDc" width="100%">
                 <responsiveSteps>
                     <responsiveStep minWidth="0" columns="1"/>
                     <responsiveStep minWidth="40em" columns="2"/>
@@ -69,7 +71,7 @@
 
             </formLayout>
             <!-- SSH Tunnel Method Forms -->
-            <formLayout id="sshTunnelContainer">
+            <vbox id="sshTunnelContainer" width="100%" >
 
                 <!-- Password Authentication Form -->
                 <formLayout id="passwordAuthForm" dataContainer="passwordAuthDc" width="100%" visible="false">
@@ -130,9 +132,9 @@
                                    required="true"
                                    requiredMessage="msg://sourceDatabaseFragment.sshKeyRequired"/>
                 </formLayout>
+            </vbox>
 
-            </formLayout>
-            <formLayout id="specificFieldsContainer">
+            <vbox id="specificFieldsContainer" width="100%" >
                 <!-- Postgres specific fields -->
                 <formLayout id="postgresForm" dataContainer="postgresDc" width="100%" visible="false">
                     <responsiveSteps>
@@ -170,7 +172,43 @@
                               required="true"
                               requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
                 </formLayout>
-            </formLayout>
+
+                <!-- Postgres SSL Certificate Form (chung cho cả verify-ca và verify-full) -->
+                <formLayout id="postgresVerifyForm" dataContainer="postgresVerifyDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceDatabaseFragment.sslCertificateTitle"/>
+
+                    <textArea property="caCertificate"
+                              label="msg://sourceDatabaseFragment.caCertificateLabel"
+                              placeholder="msg://sourceDatabaseFragment.caCertificatePlaceholder"
+                              required="true"
+                              requiredMessage="msg://sourceDatabaseFragment.caCertificateRequired"
+                              height="150px"
+                              width="100%"/>
+                    >
+                    <textArea id="clientCertificateField"
+                              property="clientCertificate"
+                              label="msg://sourceDatabaseFragment.clientCertificateLabel"
+                              placeholder="msg://sourceDatabaseFragment.clientCertificatePlaceholder"
+                              height="150px"
+                              width="100%"/>
+
+                    <textArea id="clientKeyField"
+                              property="clientKey"
+                              label="msg://sourceDatabaseFragment.clientKeyLabel"
+                              placeholder="msg://sourceDatabaseFragment.clientKeyPlaceholder"
+                              height="150px"
+                              width="100%"/>
+
+                    <passwordField id="clientKeyPasswordField"
+                                   property="clientKeyPassword"
+                                   label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
+                                   placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"/>
+                </formLayout>
+            </vbox>
             <textField property="jdbcUrlParams"
                        label="msg://sourceDatabaseFragment.jdbcLabel"
                        placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"

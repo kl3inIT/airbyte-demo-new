@@ -8,6 +8,9 @@
             <fetchPlan extends="_base"/>
             <loader id="sourceDl"/>
         </instance>
+        <!-- THÊM: container cho cấu hình DB DTO -->
+        <instance id="sourceDatabaseDc"
+                  class="com.company.airbyte.dto.source.SourceDatabaseDTO"/>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
