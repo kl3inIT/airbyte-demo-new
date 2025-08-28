@@ -59,6 +59,8 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     private InstanceContainer<SourcePostgresDTO> postgresDc;
     @ViewComponent
     private InstanceContainer<SourceMssqlDTO> mssqlDc;
+    @ViewComponent
+
 
 
     @Subscribe(target = Target.HOST_CONTROLLER)

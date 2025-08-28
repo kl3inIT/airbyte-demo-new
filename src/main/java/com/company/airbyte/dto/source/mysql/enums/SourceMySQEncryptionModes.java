@@ -7,10 +7,10 @@ import org.springframework.lang.Nullable;
 
 public enum SourceMySQEncryptionModes implements EnumClass<String> {
 
-    PREFER("prefer"),
-    REQUIRE("require"),
+    PREFERRED("preferred"),
+    REQUIRED("required"),
     VERIFY_CA("verify-ca"),
-    VERIFY_FULL("verify-identity")
+    VERIFY_IDENTITY("verify-identity")
     ;
 
     private final String id;

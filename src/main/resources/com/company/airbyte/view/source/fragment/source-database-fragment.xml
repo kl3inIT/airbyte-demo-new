@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
     <data>
-        <instance id="sourceDatabaseDc"
-                  class="com.company.airbyte.dto.source.SourceDatabaseDTO" provided="true">
-
-        </instance>
-        <instance id="postgresDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresDTO">
-        </instance>
-        <instance id="mssqlDc" class="com.company.airbyte.dto.source.mssql.SourceMssqlDTO">
-        </instance>
-        <instance id="passwordAuthDc" class="com.company.airbyte.dto.source.common.PasswordAuthenticationDTO">
-        </instance>
-        <instance id="sshKeyAuthDc" class="com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO">
-        </instance>
-        <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
-        </instance>
-
+        <instance id="sourceDatabaseDc" class="com.company.airbyte.dto.source.SourceDatabaseDTO" provided="true"></instance>
+        <instance id="postgresDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresDTO"></instance>
+        <instance id="mssqlDc" class="com.company.airbyte.dto.source.mssql.SourceMssqlDTO"></instance>
+        <instance id="passwordAuthDc" class="com.company.airbyte.dto.source.common.PasswordAuthenticationDTO"></instance>
+        <instance id="sshKeyAuthDc" class="com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO"></instance>
+        <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO"></instance>
+        <instance id="mysqlDc" class="com.company.airbyte.dto.source.mysql.dto.SourceMysqlDTO"></instance>
     </data>
 
     <content>
@@ -216,18 +208,25 @@
 
 
                 <!-- MySQL specific fields -->
-                <formLayout id="mysqlForm" dataContainer="mssqlDc" width="100%" visible="false">
+                <formLayout id="mysqlForm" dataContainer="mysqlDc" width="100%" visible="false">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                         <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
+
+                    <comboBox id="encryptionField"
+                              property="encryption"
+                              label="msg://sourceDatabaseFragment.Encryption"
+                              placeholder="msg://sourceDatabaseFragment.encryptionPlayho"
+                              />
+
 
                     <comboBox id="mssqlReplicationMethodComboBox"
                               property="replicationMethod"
                               label="msg://sourceDatabaseFragment.replicationLabel"
                               placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
                               required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired" visible=""/>
                 </formLayout>
 
             </vbox>
