@@ -9,6 +9,10 @@
         </instance>
         <instance id="mssqlDc" class="com.company.airbyte.dto.source.mssql.SourceMssqlDTO">
         </instance>
+        <instance id="passwordAuthDc" class="com.company.airbyte.dto.source.common.PasswordAuthenticationDTO">
+        </instance>
+        <instance id="sshKeyAuthDc" class="com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO">
+        </instance>
 
     </data>
 
@@ -57,21 +61,77 @@
 
                 <passwordField property="password"
                                label="msg://sourceDatabaseFragment.passwordLabel"
-                               placeholder="msg://sourceDatabaseFragment.passwordPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.passwordRequired"/>
+                               placeholder="msg://sourceDatabaseFragment.passwordPlaceholder"/>
 
                 <comboBox property="tunnelMethod"
                           label="msg://sourceDatabaseFragment.sshLabel"
-                          placeholder="msg://sourceDatabaseFragment.sshPlaceholder"
-                          required="true"
-                          requiredMessage="msg://sourceDatabaseFragment.sshRequired"/>
-
-                <textField property="jdbcUrlParams"
-                           label="msg://sourceDatabaseFragment.jdbcLabel"
-                           placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"/>
+                          placeholder="msg://sourceDatabaseFragment.sshPlaceholder"/>
 
             </formLayout>
+            <!-- SSH Tunnel Method Forms -->
+            <vbox id="sshTunnelContainer" width="100%" spacing="true">
+
+                <!-- Password Authentication Form -->
+                <formLayout id="passwordAuthForm" dataContainer="passwordAuthDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+
+                    <textField property="tunnelHost"
+                               label="msg://sourceDatabaseFragment.tunnelHostLabel"
+                               placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"/>
+
+                    <textField property="tunnelPort"
+                               label="msg://sourceDatabaseFragment.tunnelPortLabel"
+                               placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"/>
+
+                    <textField property="tunnelUser"
+                               label="msg://sourceDatabaseFragment.tunnelUserLabel"
+                               placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"/>
+
+                    <passwordField property="tunnelUserPassword"
+                                   label="msg://sourceDatabaseFragment.tunnelPasswordLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelPasswordPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelPasswordRequired"/>
+                </formLayout>
+
+                <!-- SSH Key Authentication Form -->
+                <formLayout id="sshKeyAuthForm" dataContainer="sshKeyAuthDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+
+                    <textField property="tunnelHost"
+                               label="msg://sourceDatabaseFragment.tunnelHostLabel"
+                               placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"/>
+
+                    <textField property="tunnelPort"
+                               label="msg://sourceDatabaseFragment.tunnelPortLabel"
+                               placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"/>
+
+                    <textField property="tunnelUser"
+                               label="msg://sourceDatabaseFragment.tunnelUserLabel"
+                               placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"/>
+
+                    <passwordField property="tunnelUserPassword"
+                                   label="msg://sourceDatabaseFragment.sshKeyLabel"
+                                   placeholder="msg://sourceDatabaseFragment.sshKeyPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.sshKeyRequired"/>
+                </formLayout>
+
+            </vbox>
             <vbox id="specificFieldsContainer" width="100%" spacing="true">
                 <!-- Postgres specific fields -->
                 <formLayout id="postgresForm" dataContainer="postgresDc" width="100%" visible="false">
@@ -83,16 +143,12 @@
                     <comboBox id="postgresSslModeComboBox"
                               property="sslMode"
                               label="msg://sourceDatabaseFragment.sslLabel"
-                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.sslRequired"/>
+                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
 
                     <comboBox id="postgresReplicationMethodComboBox"
                               property="replicationMethod"
                               label="msg://sourceDatabaseFragment.replicationLabel"
-                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"/>
                 </formLayout>
 
                 <!-- MSSQL specific fields -->
@@ -105,9 +161,7 @@
                     <comboBox id="mssqlSslMethodComboBox"
                               property="sslMethod"
                               label="msg://sourceDatabaseFragment.sslLabel"
-                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.sslRequired"/>
+                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
 
                     <comboBox id="mssqlReplicationMethodComboBox"
                               property="replicationMethod"
@@ -117,6 +171,9 @@
                               requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
                 </formLayout>
             </vbox>
+            <textField property="jdbcUrlParams"
+                       label="msg://sourceDatabaseFragment.jdbcLabel"
+                       placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"/>
         </vbox>
     </content>
 </fragment>

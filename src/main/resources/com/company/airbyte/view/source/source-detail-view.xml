@@ -52,7 +52,7 @@
                       placeholder="msg://sourceDetailView.descriptionPlaceholder"
                       maxLength="200"/>
         </formLayout>
-        <vbox id="sourceDetailVbox" width="100%">
+        <vbox id="sourceDetailVbox" width="100%" >
 
         </vbox>
         <hbox id="detailActions">

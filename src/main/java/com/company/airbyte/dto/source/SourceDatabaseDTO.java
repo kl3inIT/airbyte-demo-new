@@ -1,6 +1,7 @@
 package com.company.airbyte.dto.source;
 
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
+import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.entity.DatabaseType;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
@@ -24,6 +25,16 @@ public class SourceDatabaseDTO extends SourceDTO {
     private String tunnelMethod;
 
     private String jdbcUrlParams;
+
+    private SourceSSHTunnelMethodDTO sshTunnelMethod;
+
+    public SourceSSHTunnelMethodDTO getSshTunnelMethod() {
+        return sshTunnelMethod;
+    }
+
+    public void setSshTunnelMethod(SourceSSHTunnelMethodDTO sshTunnelMethod) {
+        this.sshTunnelMethod = sshTunnelMethod;
+    }
 
     public DatabaseType getDatabaseType() {
         return databaseType == null ? null : DatabaseType.fromId(databaseType);

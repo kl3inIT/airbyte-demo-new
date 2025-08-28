@@ -1,6 +1,9 @@
 package com.company.airbyte.dto.source.common;
 
-public class PasswordAuthenticationDTO {
+import io.jmix.core.metamodel.annotation.JmixEntity;
+
+@JmixEntity
+public class PasswordAuthenticationDTO extends SourceSSHTunnelMethodDTO{
     private String tunnelHost;
 
     private Long tunnelPort;
