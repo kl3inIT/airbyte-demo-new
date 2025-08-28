@@ -5,12 +5,12 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 import org.springframework.lang.Nullable;
 
 public enum SourcePostgresSSLModes implements EnumClass<String> {
-    DISABLE("disable"),
-    ALLOW("allow"),
-    PREFER("prefer"),
-    REQUIRE("require"),
-    VERIFY_CA("verify-ca"),
-    VERIFY_FULL("verify-full");
+    DISABLE("DISABLE"),
+    ALLOW("ALLOW"),
+    PREFER("PREFER"),
+    REQUIRE("REQUIRE"),
+    VERIFY_CA("VERIFY_CA"),
+    VERIFY_FULL("VERIFY_FULL");
 
     private final String id;
 

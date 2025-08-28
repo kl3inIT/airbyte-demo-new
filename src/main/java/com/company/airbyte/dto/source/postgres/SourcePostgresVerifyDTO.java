@@ -3,7 +3,7 @@ package com.company.airbyte.dto.source.postgres;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
 @JmixEntity
-public class SourcePostgresVerifyFullDTO {
+public class SourcePostgresVerifyDTO {
 
     private String caCertificate;
 
