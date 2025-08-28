@@ -2,16 +2,17 @@ package com.company.airbyte.view.source.fragment;
 
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
-import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.dto.source.mssql.SourceMssqlDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresSSLModes;
 import com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO;
 import com.company.airbyte.entity.DatabaseType;
+import com.vaadin.flow.component.ScrollOptions;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.core.Metadata;
 import io.jmix.flowui.component.formlayout.JmixFormLayout;
+import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.fragment.FragmentDescriptor;
 import io.jmix.flowui.fragmentrenderer.FragmentRenderer;
 import io.jmix.flowui.fragmentrenderer.RendererItemContainer;
@@ -36,6 +37,13 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     private JmixFormLayout passwordAuthForm;
 
     @ViewComponent
+    private TypedTextField<String> schemas;
+
+    @ViewComponent
+    private FormLayout mysqlForm;
+
+
+    @ViewComponent
     private JmixFormLayout sshKeyAuthForm;
 
     @ViewComponent
@@ -52,10 +60,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     @ViewComponent
     private InstanceContainer<SourceMssqlDTO> mssqlDc;
 
-    @Subscribe(target = Target.HOST_CONTROLLER)
-    public void onHostInit(final View.InitEvent event) {
-
-    }
 
     @Subscribe(target = Target.HOST_CONTROLLER)
     public void onHostReady(final View.ReadyEvent event) {
@@ -66,8 +70,11 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         }
     }
 
+
     @Subscribe(id = "sourceDatabaseDc", target = Target.DATA_CONTAINER)
-    public void onSourceDcItemPropertyChange(final InstanceContainer.ItemPropertyChangeEvent<SourceDatabaseDTO> event) {
+    public void onSourceDcItemPropertyChange(
+            final InstanceContainer.ItemPropertyChangeEvent<SourceDatabaseDTO> event) {
+
         if ("databaseType".equals(event.getProperty()) && event.getValue() != null) {
             DatabaseType dbType = DatabaseType.fromId(event.getValue().toString());
             visibleFieldsByDbType(dbType);
@@ -111,23 +118,26 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         postgresForm.setVisible(false);
         mssqlForm.setVisible(false);
         ensureDbSpecificItems(dbType);
+        mysqlForm.setVisible(false);
+        schemas.setVisible(false);
+
         if (dbType != null) {
             switch (dbType) {
                 case POSTGRES:
                     postgresForm.setVisible(true);
+                    schemas.setVisible(true);
                     break;
                 case MSSQL:
                     mssqlForm.setVisible(true);
                     break;
                 case MYSQL:
-                    // MySQL có thể không cần các field đặc biệt hoặc thêm form riêng
+                    mysqlForm.setVisible(true);
                     break;
             }
         }
     }
 
     private void visibleFieldsBySshTunnelMethod(SourceSSHTunnelMethod tunnelMethod) {
-        // Hide all SSH forms
         passwordAuthForm.setVisible(false);
         sshKeyAuthForm.setVisible(false);
 
@@ -135,14 +145,12 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             switch (tunnelMethod) {
                 case SSH_PASSWORD_AUTH:
                     passwordAuthForm.setVisible(true);
-//                    createPasswordAuthInstance();
                     break;
                 case SSH_KEY_AUTH:
                     sshKeyAuthForm.setVisible(true);
-//                    createSSHKeyAuthInstance();
                     break;
                 case NO_TUNNEL:
-                    // Không hiển thị form nào
+                    // không hiển thị form nào
                     break;
             }
         }
@@ -178,4 +186,11 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             postgresVerifyDc.setItem(null);
         }
     }
+
+    @Override
+    public void scrollIntoView(ScrollOptions scrollOptions) {
+        super.scrollIntoView(scrollOptions);
+    }
+
 }
+

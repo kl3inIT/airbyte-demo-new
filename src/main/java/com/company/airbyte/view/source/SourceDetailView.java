@@ -92,6 +92,7 @@ public class SourceDetailView extends StandardDetailView<Source> {
                     sourceDetailVbox.add(sourceDatabaseFragment);
                     break;
                 }
+                
                 case FILE: {
 
                 }

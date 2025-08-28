@@ -53,7 +53,7 @@
 
                 <textField property="schemas"
                            label="msg://sourceDatabaseFragment.schemaLabel"
-                           placeholder="msg://sourceDatabaseFragment.schemaPlaceholder"/>
+                           placeholder="msg://sourceDatabaseFragment.schemaPlaceholder" id="schemas" visible="true"/>
 
                 <textField property="username"
                            label="msg://sourceDatabaseFragment.usernameLabel"
@@ -208,6 +208,23 @@
                                    label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
                                    placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"/>
                 </formLayout>
+
+
+                <!-- MySQL specific fields -->
+                <formLayout id="mysqlForm" dataContainer="mssqlDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+
+                    <comboBox id="mssqlReplicationMethodComboBox"
+                              property="replicationMethod"
+                              label="msg://sourceDatabaseFragment.replicationLabel"
+                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
+                              required="true"
+                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                </formLayout>
+
             </vbox>
             <textField property="jdbcUrlParams"
                        label="msg://sourceDatabaseFragment.jdbcLabel"

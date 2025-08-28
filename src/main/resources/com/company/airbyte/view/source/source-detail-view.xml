@@ -47,7 +47,6 @@
                     label="msg://sourceDetailView.providerUnitLabel"
                     placeholder="msg://sourceDetailView.providerUnitPlaceholder"
                     required="true"/>
-
             <!-- Mô tả nguồn -->
             <textArea id="descriptionField"
                       property="description"
@@ -55,6 +54,7 @@
                       placeholder="msg://sourceDetailView.descriptionPlaceholder"
                       maxLength="200"/>
         </formLayout>
+
         <vbox id="sourceDetailVbox" width="100%" >
 
         </vbox>
