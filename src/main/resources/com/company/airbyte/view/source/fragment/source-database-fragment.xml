@@ -71,7 +71,7 @@
 
             </formLayout>
             <!-- SSH Tunnel Method Forms -->
-            <vbox id="sshTunnelContainer" width="100%" spacing="true">
+            <vbox id="sshTunnelContainer" width="100%" spacing="false">
 
                 <!-- Password Authentication Form -->
                 <formLayout id="passwordAuthForm" dataContainer="passwordAuthDc" width="100%" visible="false">
@@ -79,6 +79,8 @@
                         <responsiveStep minWidth="0" columns="1"/>
                         <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
+
+                    <h4 text="msg://sourceDatabaseFragment.sshTunnelPasswordTitle"/>
 
                     <textField property="tunnelHost"
                                label="msg://sourceDatabaseFragment.tunnelHostLabel"
@@ -105,10 +107,13 @@
 
                 <!-- SSH Key Authentication Form -->
                 <formLayout id="sshKeyAuthForm" dataContainer="sshKeyAuthDc" width="100%" visible="false">
+
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                         <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
+
+                    <h4 text="msg://sourceDatabaseFragment.sshTunnelKeyTitle"/>
 
                     <textField property="tunnelHost"
                                label="msg://sourceDatabaseFragment.tunnelHostLabel"
