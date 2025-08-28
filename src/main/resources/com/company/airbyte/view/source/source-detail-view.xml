@@ -17,44 +17,52 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="sourceDc">
-            <responsiveSteps>
-                <responsiveStep minWidth="0" columns="1"/>
-                <responsiveStep minWidth="40em" columns="2"/>
-            </responsiveSteps>
-            <!-- Tên nguồn dữ liệu -->
-            <textField id="nameField"
-                       property="name"
-                       label="msg://sourceDetailView.nameLabel"
-                       placeholder="msg://sourceDetailView.namePlaceholder"
-                       required="true"
-                       requiredMessage="msg://sourceDetailView.nameRequired"/>
+        <vbox id="generalGroup"
+              width="100%">
+            <h3
+                    text="msg://sourceDetailView.infocommon">
+            </h3>
 
-            <!-- Loại nguồn -->
-            <select id="sourceTypeField"
-                    property="sourceType"
-                    label="msg://sourceDetailView.sourceTypeLabel"
-                    placeholder="msg://sourceDetailView.sourceTypePlaceholder"
-                    readOnly="true"
-                    />
+            <formLayout id="form" dataContainer="sourceDc" width="100%">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+                <!-- Tên nguồn dữ liệu -->
+                <textField id="nameField"
+                           property="name"
+                           label="msg://sourceDetailView.nameLabel"
+                           placeholder="msg://sourceDetailView.namePlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceDetailView.nameRequired"/>
 
-            <!-- Đơn vị gửi / quản lý nguồn -->
-            <select id="providerUnitField"
-                    property="providerUnit"
-                    label="msg://sourceDetailView.providerUnitLabel"
-                    placeholder="msg://sourceDetailView.providerUnitPlaceholder"
-                    required="true"/>
+                <!-- Loại nguồn -->
+                <select id="sourceTypeField"
+                        property="sourceType"
+                        label="msg://sourceDetailView.sourceTypeLabel"
+                        placeholder="msg://sourceDetailView.sourceTypePlaceholder"
+                        readOnly="true"
+                />
 
-            <!-- Mô tả nguồn -->
-            <textArea id="descriptionField"
-                      property="description"
-                      label="msg://sourceDetailView.descriptionLabel"
-                      placeholder="msg://sourceDetailView.descriptionPlaceholder"
-                      maxLength="200"/>
-        </formLayout>
-        <vbox id="sourceDetailVbox" width="100%" >
+                <!-- Đơn vị gửi / quản lý nguồn -->
+                <select id="providerUnitField"
+                        property="providerUnit"
+                        label="msg://sourceDetailView.providerUnitLabel"
+                        placeholder="msg://sourceDetailView.providerUnitPlaceholder"
+                        required="true"/>
 
+                <!-- Mô tả nguồn -->
+                <textArea id="descriptionField"
+                          property="description"
+                          label="msg://sourceDetailView.descriptionLabel"
+                          placeholder="msg://sourceDetailView.descriptionPlaceholder"
+                          maxLength="200"/>
+            </formLayout>
         </vbox>
+
+        <vbox id="sourceDetailVbox" minWidth="100%">
+        </vbox>
+
         <hbox id="detailActions">
             <button id="closeButton" action="closeAction" text="msg://sourceDetailView.cancel"/>
             <button id="saveAndCloseButton" action="saveAction" text="msg://sourceDetailView.save"/>

@@ -17,7 +17,7 @@
     </data>
 
     <content>
-        <vbox id="root" width="100%" padding="true">
+        <vbox id="root" width="100%" padding="false" spacing="false" margin="false">
             <h3 text="msg://sourceDatabaseFragment.title">
             </h3>
             <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDc" width="100%">
@@ -69,7 +69,7 @@
 
             </formLayout>
             <!-- SSH Tunnel Method Forms -->
-            <vbox id="sshTunnelContainer" width="100%" spacing="true">
+            <formLayout id="sshTunnelContainer">
 
                 <!-- Password Authentication Form -->
                 <formLayout id="passwordAuthForm" dataContainer="passwordAuthDc" width="100%" visible="false">
@@ -131,8 +131,8 @@
                                    requiredMessage="msg://sourceDatabaseFragment.sshKeyRequired"/>
                 </formLayout>
 
-            </vbox>
-            <vbox id="specificFieldsContainer" width="100%" spacing="true">
+            </formLayout>
+            <formLayout id="specificFieldsContainer">
                 <!-- Postgres specific fields -->
                 <formLayout id="postgresForm" dataContainer="postgresDc" width="100%" visible="false">
                     <responsiveSteps>
@@ -170,10 +170,11 @@
                               required="true"
                               requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
                 </formLayout>
-            </vbox>
+            </formLayout>
             <textField property="jdbcUrlParams"
                        label="msg://sourceDatabaseFragment.jdbcLabel"
-                       placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"/>
+                       placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"
+                       width="100%"/>
         </vbox>
     </content>
 </fragment>
