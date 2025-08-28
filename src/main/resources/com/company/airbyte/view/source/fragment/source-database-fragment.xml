@@ -15,6 +15,9 @@
         </instance>
         <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
         </instance>
+        <instance id="postgresCdcDc"
+                  class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
+        </instance>
 
     </data>
 
@@ -77,32 +80,37 @@
                 <formLayout id="passwordAuthForm" dataContainer="passwordAuthDc" width="100%" visible="false">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
 
-                    <h4 text="msg://sourceDatabaseFragment.sshTunnelPasswordTitle"/>
+                    <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
+                        <h4 text="msg://sourceDatabaseFragment.sshTunnelPasswordTitle" width="100%"/>
 
-                    <textField property="tunnelHost"
-                               label="msg://sourceDatabaseFragment.tunnelHostLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"/>
-
-                    <textField property="tunnelPort"
-                               label="msg://sourceDatabaseFragment.tunnelPortLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"/>
-
-                    <textField property="tunnelUser"
-                               label="msg://sourceDatabaseFragment.tunnelUserLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"/>
-
-                    <passwordField property="tunnelUserPassword"
-                                   label="msg://sourceDatabaseFragment.tunnelPasswordLabel"
-                                   placeholder="msg://sourceDatabaseFragment.tunnelPasswordPlaceholder"
+                        <textField property="tunnelHost"
+                                   label="msg://sourceDatabaseFragment.tunnelHostLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
                                    required="true"
-                                   requiredMessage="msg://sourceDatabaseFragment.tunnelPasswordRequired"/>
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"
+                                   width="100%"/>
+
+                        <textField property="tunnelPort"
+                                   label="msg://sourceDatabaseFragment.tunnelPortLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"
+                                   width="100%"/>
+
+                        <textField property="tunnelUser"
+                                   label="msg://sourceDatabaseFragment.tunnelUserLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"
+                                   width="100%"/>
+
+                        <passwordField property="tunnelUserPassword"
+                                       label="msg://sourceDatabaseFragment.tunnelPasswordLabel"
+                                       placeholder="msg://sourceDatabaseFragment.tunnelPasswordPlaceholder"
+                                       required="true"
+                                       requiredMessage="msg://sourceDatabaseFragment.tunnelPasswordRequired"
+                                       width="100%"/>
+                    </vbox>
                 </formLayout>
 
                 <!-- SSH Key Authentication Form -->
@@ -110,7 +118,8 @@
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
-                    <vbox width="100%" spacing="false" css="margin-top: 16px">
+
+                    <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
 
                         <h4 text="msg://sourceDatabaseFragment.sshTunnelKeyTitle" width="100%"/>
 
@@ -149,7 +158,9 @@
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
+
                     <vbox width="100%" padding="false" margin="false" spacing="false">
+
                         <comboBox id="postgresSslModeComboBox"
                                   property="sslMode"
                                   label="msg://sourceDatabaseFragment.sslLabel"
@@ -163,7 +174,8 @@
                                 <responsiveStep minWidth="0" columns="1"/>
                             </responsiveSteps>
 
-                            <vbox width="100%" margin="true" spacing="false" >
+                            <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
+
                                 <h4 text="msg://sourceDatabaseFragment.sslCertificateTitle" width="100%"/>
 
                                 <textArea property="caCertificate"
@@ -204,24 +216,83 @@
                     </vbox>
                 </formLayout>
 
+                <!-- Postgres CDC Form -->
+                <formLayout id="postgresCdcForm" dataContainer="postgresCdcDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
+
+                        <h4 text="msg://sourceDatabaseFragment.cdcConfigurationTitle" width="100%"/>
+
+                        <textField property="replicationSlot"
+                                   label="msg://sourceDatabaseFragment.replicationSlotLabel"
+                                   placeholder="msg://sourceDatabaseFragment.replicationSlotPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.replicationSlotRequired"
+                                   width="100%"/>
+
+                        <textField property="publication"
+                                   label="msg://sourceDatabaseFragment.publicationLabel"
+                                   placeholder="msg://sourceDatabaseFragment.publicationPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.publicationRequired"
+                                   width="100%"/>
+
+                        <textField property="initialWaitingSeconds"
+                                   label="msg://sourceDatabaseFragment.initialWaitingSecondsLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialWaitingSecondsPlaceholder"
+                                   width="100%"/>
+
+                        <textField property="queueSize"
+                                   label="msg://sourceDatabaseFragment.queueSizeLabel"
+                                   placeholder="msg://sourceDatabaseFragment.queueSizePlaceholder"
+                                   width="100%"/>
+
+                        <comboBox property="lsnCommitBehaviour"
+                                  label="msg://sourceDatabaseFragment.lsnCommitBehaviourLabel"
+                                  placeholder="msg://sourceDatabaseFragment.lsnCommitBehaviourPlaceholder"
+                                  width="100%"/>
+
+                        <textField property="heartbeatActionQuery"
+                                   label="msg://sourceDatabaseFragment.heartbeatActionQueryLabel"
+                                   placeholder="msg://sourceDatabaseFragment.heartbeatActionQueryPlaceholder"
+                                   width="100%"/>
+
+                        <comboBox property="invalidCdcCursorPositionBehavior"
+                                  label="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorLabel"
+                                  placeholder="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorPlaceholder"
+                                  width="100%"/>
+
+                        <textField property="initialLoadTimeoutHours"
+                                   label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"
+                                   width="100%"/>
+                    </vbox>
+                </formLayout>
+
                 <!-- MSSQL specific fields -->
                 <formLayout id="mssqlForm" dataContainer="mssqlDc" width="100%" visible="false">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
 
-                    <comboBox id="mssqlSslMethodComboBox"
-                              property="sslMethod"
-                              label="msg://sourceDatabaseFragment.sslLabel"
-                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
+                    <vbox width="100%" padding="false" spacing="false" margin="false">
+                        <comboBox id="mssqlSslMethodComboBox"
+                                  property="sslMethod"
+                                  label="msg://sourceDatabaseFragment.sslLabel"
+                                  placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
+                                  width="100%"/>
 
-                    <comboBox id="mssqlReplicationMethodComboBox"
-                              property="replicationMethod"
-                              label="msg://sourceDatabaseFragment.replicationLabel"
-                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                        <comboBox id="mssqlReplicationMethodComboBox"
+                                  property="replicationMethod"
+                                  label="msg://sourceDatabaseFragment.replicationLabel"
+                                  placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
+                                  required="true"
+                                  requiredMessage="msg://sourceDatabaseFragment.replicationRequired"
+                                  width="100%"/>
+                    </vbox>
                 </formLayout>
 
             </vbox>

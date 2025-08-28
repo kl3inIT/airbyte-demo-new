@@ -1,11 +1,13 @@
 package com.company.airbyte.view.source.fragment;
 
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
+import com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.dto.source.mssql.SourceMssqlDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresSSLModes;
+import com.company.airbyte.dto.source.postgres.SourcePostgresUpdateMethod;
 import com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO;
 import com.company.airbyte.entity.DatabaseType;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -51,6 +53,8 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     private InstanceContainer<SourcePostgresDTO> postgresDc;
     @ViewComponent
     private InstanceContainer<SourceMssqlDTO> mssqlDc;
+    @ViewComponent
+    private JmixFormLayout postgresCdcForm;
 
     @Subscribe(target = Target.HOST_CONTROLLER)
     public void onHostInit(final View.InitEvent event) {
@@ -86,8 +90,13 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             SourcePostgresSSLModes sslMode = SourcePostgresSSLModes.fromId(event.getValue().toString());
             updatePostgresSslCertificateForm(sslMode);
         }
-    }
 
+        if ("replicationMethod".equals(event.getProperty()) && event.getValue() != null) {
+            SourcePostgresUpdateMethod replicationMethod = SourcePostgresUpdateMethod.fromId(event.getValue().toString());
+            updatePostgresCdcForm(replicationMethod);
+        }
+
+    }
 
     private void updatePostgresSslCertificateForm(SourcePostgresSSLModes sslMode) {
         postgresVerifyForm.setVisible(false);
@@ -107,20 +116,36 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         }
     }
 
+    private void updatePostgresCdcForm(SourcePostgresUpdateMethod replicationMethod) {
+        postgresCdcForm.setVisible(false);
+//        ensureCdcItemsIfNeeded(replicationMethod);
+        if (replicationMethod.equals(SourcePostgresUpdateMethod.CDC)) {
+            postgresCdcForm.setVisible(true);
+        }
+    }
+
+
     public void visibleFieldsByDbType(DatabaseType dbType) {
-        postgresForm.setVisible(false);
-        mssqlForm.setVisible(false);
-        ensureDbSpecificItems(dbType);
+        hideAllForms();
+        clearChildContainers();
+        resetSourceExceptDbType();
+
         if (dbType != null) {
             switch (dbType) {
                 case POSTGRES:
                     postgresForm.setVisible(true);
+                    if (postgresDc.getItemOrNull() == null) {
+                        postgresDc.setItem(metadata.create(SourcePostgresDTO.class));
+                    }
                     break;
                 case MSSQL:
                     mssqlForm.setVisible(true);
+                    if (mssqlDc.getItemOrNull() == null) {
+                        mssqlDc.setItem(metadata.create(SourceMssqlDTO.class));
+                    }
                     break;
                 case MYSQL:
-                    // MySQL có thể không cần các field đặc biệt hoặc thêm form riêng
+                    //
                     break;
             }
         }
@@ -178,4 +203,32 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             postgresVerifyDc.setItem(null);
         }
     }
+
+    private void resetSourceExceptDbType() {
+        SourceDatabaseDTO sourceDatabaseDcNew = sourceDatabaseDc.getItemOrNull();
+        if (sourceDatabaseDcNew != null) {
+            DatabaseType type = sourceDatabaseDcNew.getDatabaseType();
+            sourceDatabaseDcNew = metadata.create(SourceDatabaseDTO.class);
+            sourceDatabaseDcNew.setDatabaseType(type);
+            sourceDatabaseDc.setItem(sourceDatabaseDcNew);
+        }
+    }
+
+    private void clearChildContainers() {
+        postgresDc.setItem(null);
+        mssqlDc.setItem(null);
+        postgresVerifyDc.setItem(null);
+    }
+
+
+    private void hideAllForms() {
+        postgresForm.setVisible(false);
+        mssqlForm.setVisible(false);
+        postgresCdcForm.setVisible(false);
+        postgresVerifyForm.setVisible(false);
+        passwordAuthForm.setVisible(false);
+        sshKeyAuthForm.setVisible(false);
+    }
+
+
 }
