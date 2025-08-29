@@ -30,6 +30,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
     @Autowired
     private Fragments fragments;
 
+    private SourceDatabaseFragment sourceDatabaseFragment;
+
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
         requestedType = event.getQueryParameters()
@@ -82,13 +84,14 @@ public class SourceDetailView extends StandardDetailView<Source> {
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
         sourceDetailVbox.removeAll();
+
         SourceType sourceType = getEditedEntity().getSourceType();
         if (sourceType != null) {
             switch (sourceType) {
                 case DATABASE: {
-                    SourceDatabaseFragment sourceDatabaseFragment = fragments.create(this, SourceDatabaseFragment.class);
-                    SourceDatabaseDTO any = (SourceDatabaseDTO) getEditedEntity().getConfiguration();
-                    sourceDatabaseFragment.setItem(any);
+                    sourceDatabaseFragment = fragments.create(this, SourceDatabaseFragment.class);
+                    SourceDatabaseDTO sourceDatabaseDTO = (SourceDatabaseDTO) getEditedEntity().getConfiguration();
+                    sourceDatabaseFragment.setItem(sourceDatabaseDTO);
                     sourceDetailVbox.add(sourceDatabaseFragment);
                     break;
                 }
@@ -98,4 +101,23 @@ public class SourceDetailView extends StandardDetailView<Source> {
             }
         }
     }
+
+    @Subscribe
+    public void onBeforeSave(final BeforeSaveEvent event) {
+        Source source = getEditedEntity();
+        SourceType sourceType = getEditedEntity().getSourceType();
+        if (sourceType != null) {
+            switch (sourceType) {
+                case DATABASE: {
+                    SourceDatabaseDTO sourceDatabaseDto = sourceDatabaseFragment.getItem();
+                    source.setConfiguration(sourceDatabaseDto);
+                    break;
+                }
+                case FILE: {
+
+                }
+            }
+        }
+    }
+    
 }

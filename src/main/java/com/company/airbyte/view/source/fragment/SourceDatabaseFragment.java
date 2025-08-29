@@ -1,13 +1,12 @@
 package com.company.airbyte.view.source.fragment;
 
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
+import com.company.airbyte.dto.source.common.PasswordAuthenticationDTO;
+import com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.dto.source.mssql.SourceMssqlDTO;
-import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
-import com.company.airbyte.dto.source.postgres.SourcePostgresSSLModes;
-import com.company.airbyte.dto.source.postgres.SourcePostgresUpdateMethod;
-import com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO;
+import com.company.airbyte.dto.source.postgres.*;
 import com.company.airbyte.entity.DatabaseType;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -40,33 +39,163 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     private JmixFormLayout sshKeyAuthForm;
 
     @ViewComponent
-    private InstanceContainer<SourceDatabaseDTO> sourceDatabaseDc;
-    @ViewComponent
     private JmixFormLayout postgresVerifyForm;
+
+    @ViewComponent
+    private JmixFormLayout postgresCdcForm;
 
     @Autowired
     private Metadata metadata;
+
+    @ViewComponent
+    private InstanceContainer<SourceDatabaseDTO> sourceDatabaseDc;
+
     @ViewComponent
     private InstanceContainer<SourcePostgresVerifyDTO> postgresVerifyDc;
     @ViewComponent
     private InstanceContainer<SourcePostgresDTO> postgresDc;
     @ViewComponent
+    private InstanceContainer<ReadChangesUsingWriteAheadLogCDCDTO> postgresCdcDc;
+    @ViewComponent
     private InstanceContainer<SourceMssqlDTO> mssqlDc;
     @ViewComponent
-    private JmixFormLayout postgresCdcForm;
+    private InstanceContainer<SSHKeyAuthenticationDTO> sshKeyAuthDc;
+    @ViewComponent
+    private InstanceContainer<PasswordAuthenticationDTO> passwordAuthDc;
 
-    @Subscribe(target = Target.HOST_CONTROLLER)
-    public void onHostInit(final View.InitEvent event) {
+    @Override
+    public void setItem(SourceDatabaseDTO item) {
+        super.setItem(item);
+//        sourceDatabaseDc.setItem(item);
+        initializeChildContainers(item);
 
+        visibleFieldsByDbType(item.getDatabaseType());
+        visibleFieldsBySshTunnelMethod(item.getTunnelMethod());
+
+        if (item instanceof SourcePostgresDTO pg) {
+            if (pg.getSslMode() != null) {
+                updatePostgresSslCertificateForm(pg.getSslMode());
+            }
+            if (pg.getReplicationMethod() != null) {
+                updatePostgresCdcForm(pg.getReplicationMethod());
+            }
+        }
     }
 
-    @Subscribe(target = Target.HOST_CONTROLLER)
-    public void onHostReady(final View.ReadyEvent event) {
-        SourceDatabaseDTO sourceDb = sourceDatabaseDc.getItemOrNull();
-        if (sourceDb != null) {
-            visibleFieldsByDbType(sourceDb.getDatabaseType());
-            visibleFieldsBySshTunnelMethod(sourceDb.getTunnelMethod());
+    public SourceDatabaseDTO getItem() {
+        return super.getItem();
+    }
+
+
+    private void initializeChildContainers(SourceDatabaseDTO item) {
+        if (item == null) return;
+
+        DatabaseType dbType = item.getDatabaseType();
+        if (dbType != null) {
+            switch (dbType) {
+                case POSTGRES:
+
+                    SourcePostgresDTO postgresDTO = extractOrCreatePostgresDTO(item);
+                    postgresDc.setItem(postgresDTO);
+                    // Khởi tạo verify form nếu cần
+                    if (postgresDTO.getSslMode() != null &&
+                            (postgresDTO.getSslMode().equals(SourcePostgresSSLModes.VERIFY_CA) ||
+                                    postgresDTO.getSslMode().equals(SourcePostgresSSLModes.VERIFY_FULL))) {
+                        SourcePostgresVerifyDTO verifyDTO = postgresDTO.getVerifyFullDTO();
+                        if (verifyDTO == null) {
+                            verifyDTO = metadata.create(SourcePostgresVerifyDTO.class);
+                            postgresDTO.setVerifyFullDTO(verifyDTO);
+                        }
+                        postgresVerifyDc.setItem(verifyDTO);
+                    }
+
+                    // Khởi tạo CDC form nếu cần
+                    if (postgresDTO.getReplicationMethod() != null &&
+                            postgresDTO.getReplicationMethod().equals(SourcePostgresUpdateMethod.CDC)) {
+                        ReadChangesUsingWriteAheadLogCDCDTO cdcDTO = postgresDTO.getCdcDTO();
+                        if (cdcDTO == null) {
+                            cdcDTO = metadata.create(ReadChangesUsingWriteAheadLogCDCDTO.class);
+                            postgresDTO.setCdcDTO(cdcDTO);
+                        }
+                        postgresCdcDc.setItem(cdcDTO);
+                    }
+                    break;
+
+                case MSSQL:
+                    SourceMssqlDTO mssqlDTO = extractOrCreateMssqlDTO(item);
+                    mssqlDc.setItem(mssqlDTO);
+                    break;
+
+                case MYSQL:
+                    // MySQL specific logic if needed
+                    break;
+            }
         }
+
+        initializeSSHContainers(item);
+    }
+
+    private void initializeSSHContainers(SourceDatabaseDTO item) {
+        SourceSSHTunnelMethod tunnelMethod = item.getTunnelMethod();
+        if (tunnelMethod != null) {
+            switch (tunnelMethod) {
+                case SSH_PASSWORD_AUTH:
+                    PasswordAuthenticationDTO passwordAuth = extractOrCreatePasswordAuth(item);
+                    passwordAuthDc.setItem(passwordAuth);
+                    // Cập nhật SSH method vào main item
+                    item.setSshTunnelMethod(passwordAuth);
+                    break;
+
+                case SSH_KEY_AUTH:
+                    SSHKeyAuthenticationDTO sshKeyAuth = extractOrCreateSSHKeyAuth(item);
+                    sshKeyAuthDc.setItem(sshKeyAuth);
+                    // Cập nhật SSH method vào main item
+                    item.setSshTunnelMethod(sshKeyAuth);
+                    break;
+
+                case NO_TUNNEL:
+                default:
+                    passwordAuthDc.setItem(metadata.create(PasswordAuthenticationDTO.class));
+                    sshKeyAuthDc.setItem(metadata.create(SSHKeyAuthenticationDTO.class));
+                    item.setSshTunnelMethod(null);
+                    break;
+            }
+        }
+    }
+
+    private SourcePostgresDTO extractOrCreatePostgresDTO(SourceDatabaseDTO item) {
+        // Nếu item đã là SourcePostgresDTO thì return luôn
+        if (item instanceof SourcePostgresDTO) {
+            return (SourcePostgresDTO) item;
+        }
+
+        return metadata.create(SourcePostgresDTO.class);
+    }
+
+    private SourceMssqlDTO extractOrCreateMssqlDTO(SourceDatabaseDTO item) {
+        if (item instanceof SourceMssqlDTO) {
+            return (SourceMssqlDTO) item;
+        }
+
+        return metadata.create(SourceMssqlDTO.class);
+    }
+
+    private PasswordAuthenticationDTO extractOrCreatePasswordAuth(SourceDatabaseDTO item) {
+        SourceSSHTunnelMethodDTO sshMethod = item.getSshTunnelMethod();
+        if (sshMethod instanceof PasswordAuthenticationDTO) {
+            return (PasswordAuthenticationDTO) sshMethod;
+        }
+
+        return metadata.create(PasswordAuthenticationDTO.class);
+    }
+
+    private SSHKeyAuthenticationDTO extractOrCreateSSHKeyAuth(SourceDatabaseDTO item) {
+        SourceSSHTunnelMethodDTO sshMethod = item.getSshTunnelMethod();
+        if (sshMethod instanceof SSHKeyAuthenticationDTO) {
+            return (SSHKeyAuthenticationDTO) sshMethod;
+        }
+
+        return metadata.create(SSHKeyAuthenticationDTO.class);
     }
 
     @Subscribe(id = "sourceDatabaseDc", target = Target.DATA_CONTAINER)
@@ -99,25 +228,14 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
     private void updatePostgresSslCertificateForm(SourcePostgresSSLModes sslMode) {
         postgresVerifyForm.setVisible(false);
-        ensureVerifyItemsIfNeeded(sslMode);
-        if (sslMode != null) {
-            switch (sslMode) {
-                case VERIFY_CA:
-                    postgresVerifyForm.setVisible(true);
-                    break;
-                case VERIFY_FULL:
-                    postgresVerifyForm.setVisible(true);
-                    break;
-                default:
-                    // Các SSL mode khác không cần certificate form
-                    break;
-            }
+
+        if (sslMode.equals(SourcePostgresSSLModes.VERIFY_CA) || sslMode.equals(SourcePostgresSSLModes.VERIFY_FULL)) {
+            postgresVerifyForm.setVisible(true);
         }
     }
 
     private void updatePostgresCdcForm(SourcePostgresUpdateMethod replicationMethod) {
         postgresCdcForm.setVisible(false);
-//        ensureCdcItemsIfNeeded(replicationMethod);
         if (replicationMethod.equals(SourcePostgresUpdateMethod.CDC)) {
             postgresCdcForm.setVisible(true);
         }
@@ -125,29 +243,37 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
     public void visibleFieldsByDbType(DatabaseType dbType) {
         hideAllForms();
-        clearChildContainers();
+        // clearChildContainers();  // bỏ, hoặc giữ nhưng đừng setItem(null)
         resetSourceExceptDbType();
 
         if (dbType != null) {
+            // đảm bảo các container con có item phù hợp trước khi show form
+            initializeChildContainers(sourceDatabaseDc.getItemOrNull());
+
             switch (dbType) {
                 case POSTGRES:
-                    postgresForm.setVisible(true);
+                    // đảm bảo có SourcePostgresDTO trong postgresDc
                     if (postgresDc.getItemOrNull() == null) {
-                        postgresDc.setItem(metadata.create(SourcePostgresDTO.class));
+                        SourcePostgresDTO pg = extractOrCreatePostgresDTO(sourceDatabaseDc.getItem());
+                        postgresDc.setItem(pg);
+
                     }
+                    postgresForm.setVisible(true);
                     break;
                 case MSSQL:
-                    mssqlForm.setVisible(true);
                     if (mssqlDc.getItemOrNull() == null) {
-                        mssqlDc.setItem(metadata.create(SourceMssqlDTO.class));
+                        SourceMssqlDTO mssql = extractOrCreateMssqlDTO(sourceDatabaseDc.getItem());
+                        mssqlDc.setItem(mssql);
                     }
+                    mssqlForm.setVisible(true);
                     break;
                 case MYSQL:
-                    // MySQL có thể không cần các field đặc biệt hoặc thêm form riêng
+                    // TODO: thêm form riêng nếu cần
                     break;
             }
         }
     }
+
 
     private void visibleFieldsBySshTunnelMethod(SourceSSHTunnelMethod tunnelMethod) {
         // Hide all SSH forms
@@ -158,11 +284,9 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             switch (tunnelMethod) {
                 case SSH_PASSWORD_AUTH:
                     passwordAuthForm.setVisible(true);
-//                    createPasswordAuthInstance();
                     break;
                 case SSH_KEY_AUTH:
                     sshKeyAuthForm.setVisible(true);
-//                    createSSHKeyAuthInstance();
                     break;
                 case NO_TUNNEL:
                     // Không hiển thị form nào
@@ -171,51 +295,15 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         }
     }
 
-    private void ensureDbSpecificItems(DatabaseType type) {
-        // Postgres
-        if (type == DatabaseType.POSTGRES) {
-            if (postgresDc.getItemOrNull() == null) {
-                postgresDc.setItem(metadata.create(SourcePostgresDTO.class));
-            }
-        } else {
-            postgresDc.setItem(null);
-        }
-        // MSSQL (nếu bạn dùng)
-        if (type == DatabaseType.MSSQL) {
-            if (mssqlDc.getItemOrNull() == null) {
-                mssqlDc.setItem(metadata.create(SourceMssqlDTO.class));
-            }
-        } else {
-            mssqlDc.setItem(null);
-        }
-        // Nếu là MySQL… thêm tương tự khi có form riêng
-    }
-
-    private void ensureVerifyItemsIfNeeded(SourcePostgresSSLModes mode) {
-        boolean need = mode == SourcePostgresSSLModes.VERIFY_CA || mode == SourcePostgresSSLModes.VERIFY_FULL;
-        if (need) {
-            if (postgresVerifyDc.getItemOrNull() == null) {
-                postgresVerifyDc.setItem(metadata.create(SourcePostgresVerifyDTO.class));
-            }
-        } else {
-            postgresVerifyDc.setItem(null);
-        }
-    }
-
     private void resetSourceExceptDbType() {
-        SourceDatabaseDTO sourceDatabaseDcNew = sourceDatabaseDc.getItemOrNull();
-        if (sourceDatabaseDcNew != null) {
-            DatabaseType type = sourceDatabaseDcNew.getDatabaseType();
-            sourceDatabaseDcNew = metadata.create(SourceDatabaseDTO.class);
-            sourceDatabaseDcNew.setDatabaseType(type);
-            sourceDatabaseDc.setItem(sourceDatabaseDcNew);
+        SourceDatabaseDTO cur = sourceDatabaseDc.getItemOrNull();
+        if (cur != null) {
+            DatabaseType type = cur.getDatabaseType();
+            SourceDatabaseDTO fresh = metadata.create(SourceDatabaseDTO.class);
+            fresh.setDatabaseType(type);
+            fresh.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL); // default
+            sourceDatabaseDc.setItem(fresh);
         }
-    }
-
-    private void clearChildContainers() {
-        postgresDc.setItem(null);
-        mssqlDc.setItem(null);
-        postgresVerifyDc.setItem(null);
     }
 
 
@@ -227,5 +315,9 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         passwordAuthForm.setVisible(false);
         sshKeyAuthForm.setVisible(false);
     }
+
+
+
+
 
 }

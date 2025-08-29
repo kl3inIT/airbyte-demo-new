@@ -21,22 +21,16 @@
             <column name="DELETED_BY" type="VARCHAR(255)"/>
             <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
             <column name="SOURCE_ID" type="UUID">
-                <constraints nullable="false"/>
             </column>
             <column name="DEFINITION_ID" type="UUID">
-                <constraints nullable="false"/>
             </column>
             <column name="WORKSPACE_ID" type="UUID">
-                <constraints nullable="false"/>
             </column>
             <column name="SOURCE_TYPE" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="PROVIDER_UNIT" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="DATA_FORMAT" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="DESCRIPTION" type="VARCHAR(200)"/>
             <column name="CONFIGURATION" type="jsonb">

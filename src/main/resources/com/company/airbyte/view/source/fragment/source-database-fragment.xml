@@ -297,6 +297,7 @@
 
             </vbox>
             <textField property="jdbcUrlParams"
+                       dataContainer="sourceDatabaseDc" 
                        label="msg://sourceDatabaseFragment.jdbcLabel"
                        placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"
                        width="100%"/>

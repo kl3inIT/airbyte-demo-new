@@ -5,8 +5,8 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 import org.springframework.lang.Nullable;
 
 public enum LSNCommitBehaviour implements EnumClass<String> {
-    WHILE_READING_DATA("While reading Data"),
-    AFTER_LOADING_DATA_IN_THE_DESTINATION("After loading Data in the destination");
+    WHILE_READING_DATA("WHILE_READING_DATA"),
+    AFTER_LOADING_DATA_IN_THE_DESTINATION("AFTER_LOADING_DATA_IN_THE_DESTINATION");
 
     private final String id;
 

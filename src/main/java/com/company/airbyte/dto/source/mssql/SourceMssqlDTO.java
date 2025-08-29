@@ -1,10 +1,11 @@
 package com.company.airbyte.dto.source.mssql;
 
 import com.company.airbyte.dto.source.SourceDTO;
+import com.company.airbyte.dto.source.SourceDatabaseDTO;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
 @JmixEntity
-public class SourceMssqlDTO extends SourceDTO {
+public class SourceMssqlDTO extends SourceDatabaseDTO {
 
     private String sslMethod;
 
