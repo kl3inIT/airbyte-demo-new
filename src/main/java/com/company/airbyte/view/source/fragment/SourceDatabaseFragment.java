@@ -124,16 +124,23 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     }
 
     public void visibleFieldsByDbType(DatabaseType dbType) {
-        postgresForm.setVisible(false);
-        mssqlForm.setVisible(false);
-        ensureDbSpecificItems(dbType);
+        hideAllForms();
+        clearChildContainers();
+        resetSourceExceptDbType();
+
         if (dbType != null) {
             switch (dbType) {
                 case POSTGRES:
                     postgresForm.setVisible(true);
+                    if (postgresDc.getItemOrNull() == null) {
+                        postgresDc.setItem(metadata.create(SourcePostgresDTO.class));
+                    }
                     break;
                 case MSSQL:
                     mssqlForm.setVisible(true);
+                    if (mssqlDc.getItemOrNull() == null) {
+                        mssqlDc.setItem(metadata.create(SourceMssqlDTO.class));
+                    }
                     break;
                 case MYSQL:
                     // MySQL có thể không cần các field đặc biệt hoặc thêm form riêng
@@ -194,4 +201,31 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             postgresVerifyDc.setItem(null);
         }
     }
+
+    private void resetSourceExceptDbType() {
+        SourceDatabaseDTO sourceDatabaseDcNew = sourceDatabaseDc.getItemOrNull();
+        if (sourceDatabaseDcNew != null) {
+            DatabaseType type = sourceDatabaseDcNew.getDatabaseType();
+            sourceDatabaseDcNew = metadata.create(SourceDatabaseDTO.class);
+            sourceDatabaseDcNew.setDatabaseType(type);
+            sourceDatabaseDc.setItem(sourceDatabaseDcNew);
+        }
+    }
+
+    private void clearChildContainers() {
+        postgresDc.setItem(null);
+        mssqlDc.setItem(null);
+        postgresVerifyDc.setItem(null);
+    }
+
+
+    private void hideAllForms() {
+        postgresForm.setVisible(false);
+        mssqlForm.setVisible(false);
+        postgresCdcForm.setVisible(false);
+        postgresVerifyForm.setVisible(false);
+        passwordAuthForm.setVisible(false);
+        sshKeyAuthForm.setVisible(false);
+    }
+
 }
