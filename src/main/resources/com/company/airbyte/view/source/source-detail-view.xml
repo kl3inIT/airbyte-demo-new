@@ -63,7 +63,7 @@
             </formLayout>
         </vbox>
 
-        <vbox id="sourceDetailVbox" minWidth="100%">
+        <vbox id="sourceDetailVbox" width="100%">
         </vbox>
 
         <hbox id="detailActions">
