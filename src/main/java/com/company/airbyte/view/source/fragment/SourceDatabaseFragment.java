@@ -1,7 +1,6 @@
 package com.company.airbyte.view.source.fragment;
 
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
-import com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.dto.source.mssql.SourceMssqlDTO;
@@ -124,7 +123,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         }
     }
 
-
     public void visibleFieldsByDbType(DatabaseType dbType) {
         hideAllForms();
         clearChildContainers();
@@ -145,7 +143,7 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                     }
                     break;
                 case MYSQL:
-                    //
+                    // MySQL có thể không cần các field đặc biệt hoặc thêm form riêng
                     break;
             }
         }
@@ -229,6 +227,5 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         passwordAuthForm.setVisible(false);
         sshKeyAuthForm.setVisible(false);
     }
-
 
 }

@@ -12,6 +12,16 @@ public class SourcePostgresDTO extends SourceDatabaseDTO {
 
     private SourcePostgresVerifyDTO verifyFullDTO;
 
+    private ReadChangesUsingWriteAheadLogCDCDTO cdcDTO;
+
+    public ReadChangesUsingWriteAheadLogCDCDTO getCdcDTO() {
+        return cdcDTO;
+    }
+
+    public void setCdcDTO(ReadChangesUsingWriteAheadLogCDCDTO cdcDTO) {
+        this.cdcDTO = cdcDTO;
+    }
+
     public SourcePostgresVerifyDTO getVerifyFullDTO() {
         return verifyFullDTO;
     }

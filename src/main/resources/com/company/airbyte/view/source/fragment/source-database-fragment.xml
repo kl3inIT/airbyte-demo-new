@@ -15,8 +15,8 @@
         </instance>
         <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
         </instance>
-        <instance id="postgresCdcDc"
-                  class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
+
+        <instance id="postgresCdcDc" class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
         </instance>
 
     </data>
