@@ -69,7 +69,8 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         sourceDatabaseDc.setItem(item);
         initializeChildContainers(item);
 
-        visibleFieldsByDbType(item.getDatabaseType());
+        // Khi load dữ liệu từ DB để edit, KHÔNG reset item
+        visibleFieldsByDbType(item.getDatabaseType(), false);
         visibleFieldsBySshTunnelMethod(item.getTunnelMethod());
 
         if (item instanceof SourcePostgresDTO pg) {
@@ -97,8 +98,10 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
                     SourcePostgresDTO postgresDTO = extractOrCreatePostgresDTO(item);
                     postgresDc.setItem(postgresDTO);
-                    // đảm bảo form tổng đang trỏ tới đúng subclass
-                    sourceDatabaseDc.setItem(postgresDTO);
+                    // chỉ set lại root khi thực sự reset chuyển loại DB
+                    if (sourceDatabaseDc.getItemOrNull() != postgresDTO) {
+                        sourceDatabaseDc.setItem(postgresDTO);
+                    }
                     // Khởi tạo verify form nếu cần
                     if (postgresDTO.getSslMode() != null &&
                             (postgresDTO.getSslMode().equals(SourcePostgresSSLModes.VERIFY_CA) ||
@@ -126,8 +129,9 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                 case MSSQL:
                     SourceMssqlDTO mssqlDTO = extractOrCreateMssqlDTO(item);
                     mssqlDc.setItem(mssqlDTO);
-                    // đảm bảo form tổng đang trỏ tới đúng subclass
-                    sourceDatabaseDc.setItem(mssqlDTO);
+                    if (sourceDatabaseDc.getItemOrNull() != mssqlDTO) {
+                        sourceDatabaseDc.setItem(mssqlDTO);
+                    }
                     break;
 
                 case MYSQL:
@@ -140,29 +144,29 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     }
 
     private void initializeSSHContainers(SourceDatabaseDTO item) {
-        SourceSSHTunnelMethod tunnelMethod = item.getTunnelMethod();
-        if (tunnelMethod != null) {
-            switch (tunnelMethod) {
-                case SSH_PASSWORD_AUTH:
-                    PasswordAuthenticationDTO passwordAuth = extractOrCreatePasswordAuth(item);
-                    passwordAuthDc.setItem(passwordAuth);
-                    // Cập nhật SSH method vào main item
-                    item.setSshTunnelMethod(passwordAuth);
-                    break;
+        applySshMethodToRoot(item.getTunnelMethod(), item);
+    }
 
-                case SSH_KEY_AUTH:
-                    SSHKeyAuthenticationDTO sshKeyAuth = extractOrCreateSSHKeyAuth(item);
-                    sshKeyAuthDc.setItem(sshKeyAuth);
-                    // Cập nhật SSH method vào main item
-                    item.setSshTunnelMethod(sshKeyAuth);
-                    break;
+    private void applySshMethodToRoot(SourceSSHTunnelMethod tunnelMethod, SourceDatabaseDTO root) {
+        if (tunnelMethod == null || root == null) return;
 
-                case NO_TUNNEL:
-                default:
-                    passwordAuthDc.setItem(metadata.create(PasswordAuthenticationDTO.class));
-                    sshKeyAuthDc.setItem(metadata.create(SSHKeyAuthenticationDTO.class));
-                    item.setSshTunnelMethod(null);
-                    break;
+        switch (tunnelMethod) {
+            case SSH_PASSWORD_AUTH: {
+                PasswordAuthenticationDTO passwordAuth = extractOrCreatePasswordAuth(root);
+                passwordAuthDc.setItem(passwordAuth);
+                root.setSshTunnelMethod(passwordAuth);
+                break;
+            }
+            case SSH_KEY_AUTH: {
+                SSHKeyAuthenticationDTO sshKeyAuth = extractOrCreateSSHKeyAuth(root);
+                sshKeyAuthDc.setItem(sshKeyAuth);
+                root.setSshTunnelMethod(sshKeyAuth);
+                break;
+            }
+            case NO_TUNNEL:
+            default: {
+                root.setSshTunnelMethod(null);
+                break;
             }
         }
     }
@@ -206,34 +210,15 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     public void onSourceDcItemPropertyChange(final InstanceContainer.ItemPropertyChangeEvent<SourceDatabaseDTO> event) {
         if ("databaseType".equals(event.getProperty()) && event.getValue() != null) {
             DatabaseType dbType = DatabaseType.fromId(event.getValue().toString());
-            visibleFieldsByDbType(dbType);
+            // Người dùng đổi loại DB trên UI -> cần reset để đổi DTO con
+            visibleFieldsByDbType(dbType, true);
         }
 
         if ("tunnelMethod".equals(event.getProperty()) && event.getValue() != null) {
             SourceSSHTunnelMethod tunnelMethod = SourceSSHTunnelMethod.fromId(event.getValue().toString());
             // Khởi tạo/gắn DTO SSH ngay khi người dùng chọn method
             SourceDatabaseDTO root = sourceDatabaseDc.getItemOrNull();
-            if (root != null) {
-                switch (tunnelMethod) {
-                    case SSH_PASSWORD_AUTH: {
-                        PasswordAuthenticationDTO passwordAuth = extractOrCreatePasswordAuth(root);
-                        passwordAuthDc.setItem(passwordAuth);
-                        root.setSshTunnelMethod(passwordAuth);
-                        break;
-                    }
-                    case SSH_KEY_AUTH: {
-                        SSHKeyAuthenticationDTO sshKeyAuth = extractOrCreateSSHKeyAuth(root);
-                        sshKeyAuthDc.setItem(sshKeyAuth);
-                        root.setSshTunnelMethod(sshKeyAuth);
-                        break;
-                    }
-                    case NO_TUNNEL:
-                    default: {
-                        root.setSshTunnelMethod(null);
-                        break;
-                    }
-                }
-            }
+            applySshMethodToRoot(tunnelMethod, root);
             visibleFieldsBySshTunnelMethod(tunnelMethod);
         }
 
@@ -299,10 +284,12 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         }
     }
 
-    public void visibleFieldsByDbType(DatabaseType dbType) {
+    public void visibleFieldsByDbType(DatabaseType dbType, boolean shouldReset) {
         hideAllForms();
-        // clearChildContainers();  // bỏ, hoặc giữ nhưng đừng setItem(null)
-        resetSourceExceptDbType();
+        // Chỉ reset khi người dùng đổi loại DB; khi mở bản ghi edit thì giữ nguyên
+        if (shouldReset) {
+            resetSourceExceptDbType();
+        }
 
         if (dbType != null) {
             // đảm bảo các container con có item phù hợp trước khi show form
