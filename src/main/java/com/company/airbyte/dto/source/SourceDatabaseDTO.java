@@ -5,6 +5,8 @@ import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.entity.DatabaseType;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
+import java.util.Objects;
+
 @JmixEntity
 public class SourceDatabaseDTO extends SourceDTO {
 
@@ -107,4 +109,32 @@ public class SourceDatabaseDTO extends SourceDTO {
     public void setJdbcUrlParams(String jdbcUrlParams) {
         this.jdbcUrlParams = jdbcUrlParams;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false; // gọi equals() của SourceDTO
+        SourceDatabaseDTO that = (SourceDatabaseDTO) o;
+        return Objects.equals(databaseType, that.databaseType) &&
+                Objects.equals(host, that.host) &&
+                Objects.equals(port, that.port) &&
+                Objects.equals(database, that.database) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(schemas, that.schemas) &&
+                Objects.equals(tunnelMethod, that.tunnelMethod) &&
+                Objects.equals(jdbcUrlParams, that.jdbcUrlParams) &&
+                Objects.equals(sshTunnelMethod, that.sshTunnelMethod);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                databaseType, host, port, database, username,
+                schemas, tunnelMethod, jdbcUrlParams, sshTunnelMethod
+        );
+    }
+
+
 }

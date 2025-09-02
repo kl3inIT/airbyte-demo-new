@@ -3,6 +3,8 @@ package com.company.airbyte.dto.source.postgres;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
+import java.util.Objects;
+
 @JmixEntity
 public class SourcePostgresDTO extends SourceDatabaseDTO {
 
@@ -45,5 +47,23 @@ public class SourcePostgresDTO extends SourceDatabaseDTO {
     public void setSslMode(SourcePostgresSSLModes sslMode) {
         this.sslMode = sslMode == null ? null : sslMode.getId();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false; // gọi equals() của SourceDatabaseDTO
+        SourcePostgresDTO that = (SourcePostgresDTO) o;
+        return Objects.equals(sslMode, that.sslMode) &&
+                Objects.equals(replicationMethod, that.replicationMethod) &&
+                Objects.equals(verifyFullDTO, that.verifyFullDTO) &&
+                Objects.equals(cdcDTO, that.cdcDTO);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), sslMode, replicationMethod, verifyFullDTO, cdcDTO);
+    }
+
 
 }

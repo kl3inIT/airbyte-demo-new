@@ -390,8 +390,4 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         sshKeyAuthForm.setVisible(false);
     }
 
-
-
-
-
 }

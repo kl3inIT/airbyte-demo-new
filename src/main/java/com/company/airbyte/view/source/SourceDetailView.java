@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.Metadata;
 import io.jmix.flowui.Fragments;
+import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -112,6 +113,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
                 case DATABASE: {
                     SourceDatabaseDTO sourceDatabaseDto = sourceDatabaseFragment.getItem();
                     source.setConfiguration(sourceDatabaseDto);
+                    DataContext dataContext = getViewData().getDataContext();
+                    dataContext.setModified(source, true);
                     break;
                 }
                 case FILE: {
