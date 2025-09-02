@@ -66,7 +66,7 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     @Override
     public void setItem(SourceDatabaseDTO item) {
         super.setItem(item);
-//        sourceDatabaseDc.setItem(item);
+        sourceDatabaseDc.setItem(item);
         initializeChildContainers(item);
 
         visibleFieldsByDbType(item.getDatabaseType());
@@ -83,7 +83,7 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     }
 
     public SourceDatabaseDTO getItem() {
-        return super.getItem();
+        return sourceDatabaseDc.getItemOrNull();
     }
 
 
@@ -97,6 +97,8 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
                     SourcePostgresDTO postgresDTO = extractOrCreatePostgresDTO(item);
                     postgresDc.setItem(postgresDTO);
+                    // đảm bảo form tổng đang trỏ tới đúng subclass
+                    sourceDatabaseDc.setItem(postgresDTO);
                     // Khởi tạo verify form nếu cần
                     if (postgresDTO.getSslMode() != null &&
                             (postgresDTO.getSslMode().equals(SourcePostgresSSLModes.VERIFY_CA) ||
@@ -124,6 +126,8 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                 case MSSQL:
                     SourceMssqlDTO mssqlDTO = extractOrCreateMssqlDTO(item);
                     mssqlDc.setItem(mssqlDTO);
+                    // đảm bảo form tổng đang trỏ tới đúng subclass
+                    sourceDatabaseDc.setItem(mssqlDTO);
                     break;
 
                 case MYSQL:
@@ -207,6 +211,29 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
         if ("tunnelMethod".equals(event.getProperty()) && event.getValue() != null) {
             SourceSSHTunnelMethod tunnelMethod = SourceSSHTunnelMethod.fromId(event.getValue().toString());
+            // Khởi tạo/gắn DTO SSH ngay khi người dùng chọn method
+            SourceDatabaseDTO root = sourceDatabaseDc.getItemOrNull();
+            if (root != null) {
+                switch (tunnelMethod) {
+                    case SSH_PASSWORD_AUTH: {
+                        PasswordAuthenticationDTO passwordAuth = extractOrCreatePasswordAuth(root);
+                        passwordAuthDc.setItem(passwordAuth);
+                        root.setSshTunnelMethod(passwordAuth);
+                        break;
+                    }
+                    case SSH_KEY_AUTH: {
+                        SSHKeyAuthenticationDTO sshKeyAuth = extractOrCreateSSHKeyAuth(root);
+                        sshKeyAuthDc.setItem(sshKeyAuth);
+                        root.setSshTunnelMethod(sshKeyAuth);
+                        break;
+                    }
+                    case NO_TUNNEL:
+                    default: {
+                        root.setSshTunnelMethod(null);
+                        break;
+                    }
+                }
+            }
             visibleFieldsBySshTunnelMethod(tunnelMethod);
         }
 
@@ -217,11 +244,42 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if ("sslMode".equals(event.getProperty()) && event.getValue() != null) {
             SourcePostgresSSLModes sslMode = SourcePostgresSSLModes.fromId(event.getValue().toString());
             updatePostgresSslCertificateForm(sslMode);
+            // Khởi tạo/ghép verify DTO khi người dùng bật verify-ca/full
+            SourcePostgresDTO pg = postgresDc.getItemOrNull();
+            if (pg != null) {
+                if (sslMode.equals(SourcePostgresSSLModes.VERIFY_CA) || sslMode.equals(SourcePostgresSSLModes.VERIFY_FULL)) {
+                    SourcePostgresVerifyDTO verifyDTO = pg.getVerifyFullDTO();
+                    if (verifyDTO == null) {
+                        verifyDTO = metadata.create(SourcePostgresVerifyDTO.class);
+                        pg.setVerifyFullDTO(verifyDTO);
+                    }
+                    postgresVerifyDc.setItem(verifyDTO);
+                } else {
+                    // chế độ không yêu cầu chứng chỉ -> bỏ tham chiếu để JSON gọn gàng
+                    pg.setVerifyFullDTO(null);
+                    postgresVerifyDc.setItem(metadata.create(SourcePostgresVerifyDTO.class));
+                }
+            }
         }
 
         if ("replicationMethod".equals(event.getProperty()) && event.getValue() != null) {
             SourcePostgresUpdateMethod replicationMethod = SourcePostgresUpdateMethod.fromId(event.getValue().toString());
             updatePostgresCdcForm(replicationMethod);
+            // Khởi tạo/ghép CDC DTO khi người dùng chọn CDC
+            SourcePostgresDTO pg = postgresDc.getItemOrNull();
+            if (pg != null) {
+                if (replicationMethod.equals(SourcePostgresUpdateMethod.CDC)) {
+                    ReadChangesUsingWriteAheadLogCDCDTO cdcDTO = pg.getCdcDTO();
+                    if (cdcDTO == null) {
+                        cdcDTO = metadata.create(ReadChangesUsingWriteAheadLogCDCDTO.class);
+                        pg.setCdcDTO(cdcDTO);
+                    }
+                    postgresCdcDc.setItem(cdcDTO);
+                } else {
+                    pg.setCdcDTO(null);
+                    postgresCdcDc.setItem(metadata.create(ReadChangesUsingWriteAheadLogCDCDTO.class));
+                }
+            }
         }
 
     }
@@ -283,9 +341,22 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if (tunnelMethod != null) {
             switch (tunnelMethod) {
                 case SSH_PASSWORD_AUTH:
+                    // đảm bảo container có item để binding 2 chiều
+                    if (passwordAuthDc.getItemOrNull() == null) {
+                        PasswordAuthenticationDTO pwd = metadata.create(PasswordAuthenticationDTO.class);
+                        passwordAuthDc.setItem(pwd);
+                        SourceDatabaseDTO root = sourceDatabaseDc.getItemOrNull();
+                        if (root != null) root.setSshTunnelMethod(pwd);
+                    }
                     passwordAuthForm.setVisible(true);
                     break;
                 case SSH_KEY_AUTH:
+                    if (sshKeyAuthDc.getItemOrNull() == null) {
+                        SSHKeyAuthenticationDTO key = metadata.create(SSHKeyAuthenticationDTO.class);
+                        sshKeyAuthDc.setItem(key);
+                        SourceDatabaseDTO root = sourceDatabaseDc.getItemOrNull();
+                        if (root != null) root.setSshTunnelMethod(key);
+                    }
                     sshKeyAuthForm.setVisible(true);
                     break;
                 case NO_TUNNEL:
@@ -299,7 +370,23 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         SourceDatabaseDTO cur = sourceDatabaseDc.getItemOrNull();
         if (cur != null) {
             DatabaseType type = cur.getDatabaseType();
-            SourceDatabaseDTO fresh = metadata.create(SourceDatabaseDTO.class);
+            SourceDatabaseDTO fresh;
+            if (type != null) {
+                switch (type) {
+                    case POSTGRES:
+                        fresh = metadata.create(SourcePostgresDTO.class);
+                        break;
+                    case MSSQL:
+                        fresh = metadata.create(SourceMssqlDTO.class);
+                        break;
+                    case MYSQL:
+                    default:
+                        fresh = metadata.create(SourceDatabaseDTO.class);
+                        break;
+                }
+            } else {
+                fresh = metadata.create(SourceDatabaseDTO.class);
+            }
             fresh.setDatabaseType(type);
             fresh.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL); // default
             sourceDatabaseDc.setItem(fresh);

@@ -2,6 +2,7 @@ package com.company.airbyte.view.source;
 
 import com.company.airbyte.dto.source.SourceDTO;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
+import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.entity.DatabaseType;
 import com.company.airbyte.entity.Source;
@@ -60,10 +61,10 @@ public class SourceDetailView extends StandardDetailView<Source> {
 
             switch (requestedType) {
                 case DATABASE: {
-                    SourceDatabaseDTO sourceDatabaseDTO = metadata.create(SourceDatabaseDTO.class);
-                    sourceDatabaseDTO.setDatabaseType(DatabaseType.POSTGRES);
-                    sourceDatabaseDTO.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL);
-                    source.setConfiguration(sourceDatabaseDTO);
+                    SourcePostgresDTO pg = metadata.create(SourcePostgresDTO.class);
+                    pg.setDatabaseType(DatabaseType.POSTGRES);
+                    pg.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL);
+                    source.setConfiguration(pg);
                     break;
                 }
                 case FILE: {
