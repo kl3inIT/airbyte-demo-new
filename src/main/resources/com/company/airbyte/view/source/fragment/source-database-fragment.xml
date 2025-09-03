@@ -16,7 +16,8 @@
         <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
         </instance>
 
-        <instance id="postgresCdcDc" class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
+        <instance id="postgresCdcDc"
+                  class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
         </instance>
 
     </data>
@@ -144,7 +145,7 @@
                                    requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"
                                    width="100%"/>
 
-                        <passwordField property="tunnelUserPassword"
+                        <passwordField property="sshKey"
                                        label="msg://sourceDatabaseFragment.sshKeyLabel"
                                        placeholder="msg://sourceDatabaseFragment.sshKeyPlaceholder"
                                        required="true"
@@ -244,15 +245,17 @@
                                    requiredMessage="msg://sourceDatabaseFragment.publicationRequired"
                                    width="100%"/>
 
-                        <integerField property="initialWaitingSeconds"
-                                   label="msg://sourceDatabaseFragment.initialWaitingSecondsLabel"
-                                   placeholder="msg://sourceDatabaseFragment.initialWaitingSecondsPlaceholder"
-                                   width="100%"/>
+                        <textField property="initialWaitingSeconds"
+                                         label="msg://sourceDatabaseFragment.initialWaitingSecondsLabel"
+                                         placeholder="msg://sourceDatabaseFragment.initialWaitingSecondsPlaceholder"
+                                         value="1200"
+                                         width="100%"/>
 
-                        <integerField property="queueSize"
-                                   label="msg://sourceDatabaseFragment.queueSizeLabel"
-                                   placeholder="msg://sourceDatabaseFragment.queueSizePlaceholder"
-                                   width="100%"/>
+                        <textField property="queueSize"
+                                         label="msg://sourceDatabaseFragment.queueSizeLabel"
+                                         placeholder="msg://sourceDatabaseFragment.queueSizePlaceholder"
+                                         value="10000"
+                                         width="100%"/>
 
                         <comboBox property="lsnCommitBehaviour"
                                   label="msg://sourceDatabaseFragment.lsnCommitBehaviourLabel"
@@ -269,10 +272,11 @@
                                   placeholder="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorPlaceholder"
                                   width="100%"/>
 
-                        <integerField property="initialLoadTimeoutHours"
-                                   label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
-                                   placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"
-                                   width="100%"/>
+                        <textField property="initialLoadTimeoutHours"
+                                         label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
+                                         placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"
+                                         value="8"
+                                         width="100%"/>
                     </vbox>
                 </formLayout>
 
@@ -301,7 +305,7 @@
 
             </vbox>
             <textField property="jdbcUrlParams"
-                       dataContainer="sourceDatabaseDc" 
+                       dataContainer="sourceDatabaseDc"
                        label="msg://sourceDatabaseFragment.jdbcLabel"
                        placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"
                        width="100%"/>

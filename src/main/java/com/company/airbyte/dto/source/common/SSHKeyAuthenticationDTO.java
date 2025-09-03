@@ -10,13 +10,12 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
     private String tunnelHost;
 
     @NotBlank
-    private Integer tunnelPort = 22;
+    private Long tunnelPort;
 
     @NotBlank
     private String tunnelUser;
 
-    @NotBlank
-    private String tunnelUserPassword;
+    private String sshKey;
 
     public String getTunnelHost() {
         return tunnelHost;
@@ -26,11 +25,11 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
         this.tunnelHost = tunnelHost;
     }
 
-    public Integer getTunnelPort() {
+    public Long getTunnelPort() {
         return tunnelPort;
     }
 
-    public void setTunnelPort(Integer tunnelPort) {
+    public void setTunnelPort(Long tunnelPort) {
         this.tunnelPort = tunnelPort;
     }
 
@@ -42,11 +41,11 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
         this.tunnelUser = tunnelUser;
     }
 
-    public String getTunnelUserPassword() {
-        return tunnelUserPassword;
+    public String getSshKey() {
+        return sshKey;
     }
 
-    public void setTunnelUserPassword(String tunnelUserPassword) {
-        this.tunnelUserPassword = tunnelUserPassword;
+    public void setSshKey(String sshKey) {
+        this.sshKey = sshKey;
     }
 }

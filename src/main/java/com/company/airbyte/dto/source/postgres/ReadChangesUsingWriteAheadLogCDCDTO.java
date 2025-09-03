@@ -12,9 +12,9 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
     @NotBlank
     private String publication;
 
-    private Integer initialWaitingSeconds = 1200;
+    private Long initialWaitingSeconds ;
 
-    private Integer queueSize = 10000;
+    private Long queueSize ;
 
     private String lsnCommitBehaviour;
 
@@ -22,24 +22,24 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
 
     private String invalidCdcCursorPositionBehavior;
 
-    private Integer initialLoadTimeoutHours = 8;
+    private Long initialLoadTimeoutHours ;
 
     private String plugin;
 
-    public LSNCommitBehaviour getLsnCommitBehaviour() {
-        return lsnCommitBehaviour == null ? null : LSNCommitBehaviour.fromId(lsnCommitBehaviour);
+    public LSNCommitBehaviourType getLsnCommitBehaviour() {
+        return lsnCommitBehaviour == null ? null : LSNCommitBehaviourType.fromId(lsnCommitBehaviour);
     }
 
-    public void setLsnCommitBehaviour(LSNCommitBehaviour lsnCommitBehaviour) {
-        this.lsnCommitBehaviour = lsnCommitBehaviour == null ? null : lsnCommitBehaviour.getId();
+    public void setLsnCommitBehaviour(LSNCommitBehaviourType lsnCommitBehaviourType) {
+        this.lsnCommitBehaviour = lsnCommitBehaviourType == null ? null : lsnCommitBehaviourType.getId();
     }
 
 
-    public SourcePostgresInvalidCDCPositionBehaviorAdvanced getInvalidCdcCursorPositionBehavior() {
-        return invalidCdcCursorPositionBehavior == null ? null : SourcePostgresInvalidCDCPositionBehaviorAdvanced.fromId(invalidCdcCursorPositionBehavior);
+    public SourcePostgresInvalidCDCPositionBehaviorAdvancedType getInvalidCdcCursorPositionBehavior() {
+        return invalidCdcCursorPositionBehavior == null ? null : SourcePostgresInvalidCDCPositionBehaviorAdvancedType.fromId(invalidCdcCursorPositionBehavior);
     }
 
-    public void setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvanced invalidCdcCursorPositionBehavior) {
+    public void setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvancedType invalidCdcCursorPositionBehavior) {
         this.invalidCdcCursorPositionBehavior = invalidCdcCursorPositionBehavior == null ? null : invalidCdcCursorPositionBehavior.getId();
     }
 
@@ -59,19 +59,19 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
         this.publication = publication;
     }
 
-    public Integer getInitialWaitingSeconds() {
+    public Long getInitialWaitingSeconds() {
         return initialWaitingSeconds;
     }
 
-    public void setInitialWaitingSeconds(Integer initialWaitingSeconds) {
+    public void setInitialWaitingSeconds(Long initialWaitingSeconds) {
         this.initialWaitingSeconds = initialWaitingSeconds;
     }
 
-    public Integer getQueueSize() {
+    public Long getQueueSize() {
         return queueSize;
     }
 
-    public void setQueueSize(Integer queueSize) {
+    public void setQueueSize(Long queueSize) {
         this.queueSize = queueSize;
     }
 
@@ -83,11 +83,11 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
         this.heartbeatActionQuery = heartbeatActionQuery;
     }
 
-    public Integer getInitialLoadTimeoutHours() {
+    public Long getInitialLoadTimeoutHours() {
         return initialLoadTimeoutHours;
     }
 
-    public void setInitialLoadTimeoutHours(Integer initialLoadTimeoutHours) {
+    public void setInitialLoadTimeoutHours(Long initialLoadTimeoutHours) {
         this.initialLoadTimeoutHours = initialLoadTimeoutHours;
     }
 

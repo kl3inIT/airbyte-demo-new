@@ -4,14 +4,13 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 
 import org.springframework.lang.Nullable;
 
-public enum SourcePostgresUpdateMethod implements EnumClass<String> {
-    CDC("CDC"),
-    XMIN("XMIN"),
-    STANDARD("STANDARD");
+public enum LSNCommitBehaviourType implements EnumClass<String> {
+    WHILE_READING_DATA("WHILE_READING_DATA"),
+    AFTER_LOADING_DATA_IN_THE_DESTINATION("AFTER_LOADING_DATA_IN_THE_DESTINATION");
 
     private final String id;
 
-    SourcePostgresUpdateMethod(String id) {
+    LSNCommitBehaviourType(String id) {
         this.id = id;
     }
 
@@ -20,8 +19,8 @@ public enum SourcePostgresUpdateMethod implements EnumClass<String> {
     }
 
     @Nullable
-    public static SourcePostgresUpdateMethod fromId(String id) {
-        for (SourcePostgresUpdateMethod at : SourcePostgresUpdateMethod.values()) {
+    public static LSNCommitBehaviourType fromId(String id) {
+        for (LSNCommitBehaviourType at : LSNCommitBehaviourType.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }

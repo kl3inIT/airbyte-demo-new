@@ -32,19 +32,19 @@ public class SourcePostgresDTO extends SourceDatabaseDTO {
         this.verifyFullDTO = verifyFullDTO;
     }
 
-    public SourcePostgresUpdateMethod getReplicationMethod() {
-        return replicationMethod == null ? null : SourcePostgresUpdateMethod.fromId(replicationMethod);
+    public SourcePostgresUpdateMethodType getReplicationMethod() {
+        return replicationMethod == null ? null : SourcePostgresUpdateMethodType.fromId(replicationMethod);
     }
 
-    public void setReplicationMethod(SourcePostgresUpdateMethod replicationMethod) {
+    public void setReplicationMethod(SourcePostgresUpdateMethodType replicationMethod) {
         this.replicationMethod = replicationMethod == null ? null : replicationMethod.getId();
     }
 
-    public SourcePostgresSSLModes getSslMode() {
-        return sslMode == null ? null : SourcePostgresSSLModes.fromId(sslMode);
+    public SourcePostgresSSLModesType getSslMode() {
+        return sslMode == null ? null : SourcePostgresSSLModesType.fromId(sslMode);
     }
 
-    public void setSslMode(SourcePostgresSSLModes sslMode) {
+    public void setSslMode(SourcePostgresSSLModesType sslMode) {
         this.sslMode = sslMode == null ? null : sslMode.getId();
     }
 

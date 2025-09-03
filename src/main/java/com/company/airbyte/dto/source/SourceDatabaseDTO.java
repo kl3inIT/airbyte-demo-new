@@ -19,7 +19,6 @@ public class SourceDatabaseDTO extends SourceDTO {
     private String host;
 
     @NotNull
-    @Pattern(regexp = "\\d+", message = "Chỉ được nhập số")
     private Long port;
 
     @NotBlank

@@ -8,7 +8,6 @@ import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.dto.source.mssql.SourceMssqlDTO;
 import com.company.airbyte.dto.source.postgres.*;
 import com.company.airbyte.entity.DatabaseType;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.core.Metadata;
 import io.jmix.flowui.component.formlayout.JmixFormLayout;
@@ -18,7 +17,6 @@ import io.jmix.flowui.fragmentrenderer.RendererItemContainer;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.Target;
-import io.jmix.flowui.view.View;
 import io.jmix.flowui.view.ViewComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -104,8 +102,8 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                     }
                     // Khởi tạo verify form nếu cần
                     if (postgresDTO.getSslMode() != null &&
-                            (postgresDTO.getSslMode().equals(SourcePostgresSSLModes.VERIFY_CA) ||
-                                    postgresDTO.getSslMode().equals(SourcePostgresSSLModes.VERIFY_FULL))) {
+                            (postgresDTO.getSslMode().equals(SourcePostgresSSLModesType.VERIFY_CA) ||
+                                    postgresDTO.getSslMode().equals(SourcePostgresSSLModesType.VERIFY_FULL))) {
                         SourcePostgresVerifyDTO verifyDTO = postgresDTO.getVerifyFullDTO();
                         if (verifyDTO == null) {
                             verifyDTO = metadata.create(SourcePostgresVerifyDTO.class);
@@ -116,15 +114,15 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
                     // Khởi tạo CDC form nếu cần
                     if (postgresDTO.getReplicationMethod() != null &&
-                            postgresDTO.getReplicationMethod().equals(SourcePostgresUpdateMethod.CDC)) {
+                            postgresDTO.getReplicationMethod().equals(SourcePostgresUpdateMethodType.CDC)) {
                         ReadChangesUsingWriteAheadLogCDCDTO cdcDTO = postgresDTO.getCdcDTO();
                         if (cdcDTO == null) {
                             cdcDTO = metadata.create(ReadChangesUsingWriteAheadLogCDCDTO.class);
-//                            cdcDTO.setInitialWaitingSeconds(1200L);
-//                            cdcDTO.setQueueSize(10000L);
-                            cdcDTO.setLsnCommitBehaviour(LSNCommitBehaviour.AFTER_LOADING_DATA_IN_THE_DESTINATION);
-                            cdcDTO.setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvanced.FAIL_SYNC);
-//                            cdcDTO.setInitialLoadTimeoutHours(8L);
+                            cdcDTO.setInitialWaitingSeconds(1200L);
+                            cdcDTO.setQueueSize(10000L);
+                            cdcDTO.setLsnCommitBehaviour(LSNCommitBehaviourType.AFTER_LOADING_DATA_IN_THE_DESTINATION);
+                            cdcDTO.setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvancedType.FAIL_SYNC);
+                            cdcDTO.setInitialLoadTimeoutHours(8L);
                             postgresDTO.setCdcDTO(cdcDTO);
                         }
                         postgresCdcDc.setItem(cdcDTO);
@@ -232,12 +230,12 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     @Subscribe(id = "postgresDc", target = Target.DATA_CONTAINER)
     public void onPostgresDcItemPropertyChange(final InstanceContainer.ItemPropertyChangeEvent<SourcePostgresDTO> event) {
         if ("sslMode".equals(event.getProperty()) && event.getValue() != null) {
-            SourcePostgresSSLModes sslMode = SourcePostgresSSLModes.fromId(event.getValue().toString());
+            SourcePostgresSSLModesType sslMode = SourcePostgresSSLModesType.fromId(event.getValue().toString());
             updatePostgresSslCertificateForm(sslMode);
             // Khởi tạo/ghép verify DTO khi người dùng bật verify-ca/full
             SourcePostgresDTO pg = postgresDc.getItemOrNull();
             if (pg != null) {
-                if (sslMode.equals(SourcePostgresSSLModes.VERIFY_CA) || sslMode.equals(SourcePostgresSSLModes.VERIFY_FULL)) {
+                if (sslMode.equals(SourcePostgresSSLModesType.VERIFY_CA) || sslMode.equals(SourcePostgresSSLModesType.VERIFY_FULL)) {
                     SourcePostgresVerifyDTO verifyDTO = pg.getVerifyFullDTO();
                     if (verifyDTO == null) {
                         verifyDTO = metadata.create(SourcePostgresVerifyDTO.class);
@@ -253,12 +251,12 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         }
 
         if ("replicationMethod".equals(event.getProperty()) && event.getValue() != null) {
-            SourcePostgresUpdateMethod replicationMethod = SourcePostgresUpdateMethod.fromId(event.getValue().toString());
+            SourcePostgresUpdateMethodType replicationMethod = SourcePostgresUpdateMethodType.fromId(event.getValue().toString());
             updatePostgresCdcForm(replicationMethod);
             // Khởi tạo/ghép CDC DTO khi người dùng chọn CDC
             SourcePostgresDTO pg = postgresDc.getItemOrNull();
             if (pg != null) {
-                if (replicationMethod.equals(SourcePostgresUpdateMethod.CDC)) {
+                if (replicationMethod.equals(SourcePostgresUpdateMethodType.CDC)) {
                     ReadChangesUsingWriteAheadLogCDCDTO cdcDTO = pg.getCdcDTO();
                     if (cdcDTO == null) {
                         cdcDTO = metadata.create(ReadChangesUsingWriteAheadLogCDCDTO.class);
@@ -274,17 +272,17 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
     }
 
-    private void updatePostgresSslCertificateForm(SourcePostgresSSLModes sslMode) {
+    private void updatePostgresSslCertificateForm(SourcePostgresSSLModesType sslMode) {
         postgresVerifyForm.setVisible(false);
 
-        if (sslMode.equals(SourcePostgresSSLModes.VERIFY_CA) || sslMode.equals(SourcePostgresSSLModes.VERIFY_FULL)) {
+        if (sslMode.equals(SourcePostgresSSLModesType.VERIFY_CA) || sslMode.equals(SourcePostgresSSLModesType.VERIFY_FULL)) {
             postgresVerifyForm.setVisible(true);
         }
     }
 
-    private void updatePostgresCdcForm(SourcePostgresUpdateMethod replicationMethod) {
+    private void updatePostgresCdcForm(SourcePostgresUpdateMethodType replicationMethod) {
         postgresCdcForm.setVisible(false);
-        if (replicationMethod.equals(SourcePostgresUpdateMethod.CDC)) {
+        if (replicationMethod.equals(SourcePostgresUpdateMethodType.CDC)) {
             postgresCdcForm.setVisible(true);
         }
     }
