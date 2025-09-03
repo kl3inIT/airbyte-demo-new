@@ -17,11 +17,13 @@
         <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
         </instance>
 
-        <instance id="postgresCdcDc" class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
+        <instance id="postgresCdcDc"
+                  class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
         </instance>
 
         <instance id="mysqlDc" class="com.company.airbyte.dto.source.mysql.dto.SourceMysqlDTO"/>
-
+        <instance id="mysqlcertificate" class="com.company.airbyte.dto.source.mysql.dto.SourceMySQLVerifyDTO"/>
+        <instance id="mysqlupdatemethod" class="com.company.airbyte.dto.source.mysql.dto.MysqlBinlogCDCDTO"/>
     </data>
 
     <content>
@@ -297,7 +299,6 @@
                                   width="100%"/>
                     </vbox>
                 </formLayout>
-
                 <!-- MySQL specific fields -->
                 <formLayout id="mysqlForm" dataContainer="mysqlDc" width="100%" visible="false">
                     <responsiveSteps>
@@ -309,23 +310,79 @@
                               property="encryption"
                               label="msg://sourceDatabaseFragment.Encryption"
                               placeholder="msg://sourceDatabaseFragment.encryptionPlayho"
-                              />
+                              width="100%" colspan="2"/>
 
+                    <formLayout id="mysqlCertificate" dataContainer="mysqlcertificate" width="100%" visible="false">
+                        <textArea property="caCertificate"
+                                  label="msg://sourceDatabaseFragment.caCertificateLabel"
+                                  placeholder="msg://sourceDatabaseFragment.caCertificatePlaceholder"
+                                  width="100%" colspan="2"/>
+                        <textArea property="clientCertificate"
+                                  label="msg://sourceDatabaseFragment.clientCertificateLabel"
+                                  placeholder="msg://sourceDatabaseFragment.clientCertificatePlaceholder"
+                                  width="100%" colspan="2"/>
+                        <textArea property="clientKey"
+                                  label="msg://sourceDatabaseFragment.clientKeyLabel"
+                                  placeholder="msg://sourceDatabaseFragment.clientKeyPlaceholder"
+                                  width="100%" colspan="2"/>
+                        <passwordField property="clientKeyPassword"
+                                       label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
+                                       placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"
+                                       width="100%" colspan="2"/>
 
-                    <comboBox id="mssqlReplicationMethodComboBox"
+                    </formLayout>
+
+                    <comboBox id="mysqlReplicationMethodComboBox"
                               property="replicationMethod"
                               label="msg://sourceDatabaseFragment.replicationLabel"
                               placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
                               required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired" visible=""/>
+                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"
+                              width="100%" colspan="2"/>
+
+                    <formLayout id="mysqlupdatemethod" dataContainer="mysqlupdatemethod" width="100%" visible="false">
+                        <textField property="serverTimezone"
+                                   label="msg://sourceDatabaseFragment.serverTimezoneLabel"
+                                   placeholder="msg://sourceDatabaseFragment.serverTimezonePlaceholder"
+                                   width="100%" colspan="2"/>
+                        <comboBox property="invalidCdcCursorPositionBehavior"
+                                  label="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorLabel"
+                                  placeholder="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorPlaceholder"
+                                  width="100%" colspan="2"/>
+                        <textField property="initialLoadTimeoutHours"
+                                   label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"
+                                   width="100%" colspan="2"/>
+                    </formLayout>
                 </formLayout>
+            </vbox>
+            <vbox>
+                <textField property="jdbcUrlParams"
+                           dataContainer="sourceDatabaseDc"
+                           label="msg://sourceDatabaseFragment.jdbcLabel"
+                           placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"
+                           width="100%"/>
+
+                <textField property="checkpointInterval"
+                           dataContainer="mysqlDc"
+                           label="msg://sourceDatabaseFragment.checkpointLabel"
+                           placeholder="msg://sourceDatabaseFragment.checkpointPlaceholder"
+                           width="100%"/>
+
+                <textField property="maxQueries"
+                           dataContainer="mysqlDc"
+                           label="msg://sourceDatabaseFragment.maxQueriesLabel"
+                           placeholder="msg://sourceDatabaseFragment.maxQueriesPlaceholder"
+                           width="100%"/>
+                <!--                <checkbox id="activeField"-->
+                <!--                          ="Kích hoạt?"-->
+                <!--                          property="active"/>-->
+                <switch property="checkPrivileges"
+                        dataContainer="mysqlDc"
+                        label="msg://sourceDatabaseFragment.checkPrivilegesLabel"
+                />
 
             </vbox>
-            <textField property="jdbcUrlParams"
-                       dataContainer="sourceDatabaseDc" 
-                       label="msg://sourceDatabaseFragment.jdbcLabel"
-                       placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"
-                       width="100%"/>
         </vbox>
     </content>
 </fragment>

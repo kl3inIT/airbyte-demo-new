@@ -7,6 +7,7 @@ import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.dto.source.mssql.SourceMssqlDTO;
 import com.company.airbyte.dto.source.mysql.dto.SourceMysqlDTO;
+import com.company.airbyte.dto.source.mysql.enums.SourceMySQEncryptionModes;
 import com.company.airbyte.dto.source.postgres.*;
 import com.company.airbyte.entity.DatabaseType;
 import com.vaadin.flow.component.ScrollOptions;
@@ -23,6 +24,7 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.Target;
 import io.jmix.flowui.view.View;
 import io.jmix.flowui.view.ViewComponent;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @FragmentDescriptor("source-database-fragment.xml")
@@ -43,6 +45,12 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
 
     @ViewComponent
     private FormLayout mysqlForm;
+
+    @ViewComponent
+    private FormLayout mysqlCertificate;
+
+    @ViewComponent
+    private FormLayout mysqlupdatemethod;
 
 
     @ViewComponent
@@ -147,7 +155,11 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                     break;
 
                 case MYSQL:
-                    // MySQL specific logic if needed
+                    SourceMysqlDTO mysqlDTO = extractOrCreateMySQLDTO(item);
+                    mysqlDc.setItem(mysqlDTO);
+                    if (sourceDatabaseDc.getItemOrNull() != mysqlDTO) {
+                        sourceDatabaseDc.setItem(mysqlDTO);
+                    }
                     break;
             }
         }
@@ -188,7 +200,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if (item instanceof SourcePostgresDTO) {
             return (SourcePostgresDTO) item;
         }
-
         return metadata.create(SourcePostgresDTO.class);
     }
 
@@ -196,7 +207,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if (item instanceof SourceMssqlDTO) {
             return (SourceMssqlDTO) item;
         }
-
         return metadata.create(SourceMssqlDTO.class);
     }
 
@@ -204,7 +214,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if (item instanceof SourceMysqlDTO) {
             return (SourceMysqlDTO) item;
         }
-
         return metadata.create(SourceMysqlDTO.class);
     }
 
@@ -222,7 +231,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if (sshMethod instanceof SSHKeyAuthenticationDTO) {
             return (SSHKeyAuthenticationDTO) sshMethod;
         }
-
         return metadata.create(SSHKeyAuthenticationDTO.class);
     }
 
@@ -230,7 +238,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
     @Subscribe(id = "sourceDatabaseDc", target = Target.DATA_CONTAINER)
     public void onSourceDcItemPropertyChange(
             final InstanceContainer.ItemPropertyChangeEvent<SourceDatabaseDTO> event) {
-
         if ("databaseType".equals(event.getProperty()) && event.getValue() != null) {
             DatabaseType dbType = DatabaseType.fromId(event.getValue().toString());
             // Người dùng đổi loại DB trên UI -> cần reset để đổi DTO con
@@ -244,7 +251,6 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
             applySshMethodToRoot(tunnelMethod, root);
             visibleFieldsBySshTunnelMethod(tunnelMethod);
         }
-
     }
 
     @Subscribe(id = "postgresDc", target = Target.DATA_CONTAINER)
@@ -317,14 +323,12 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         if (dbType != null) {
             // đảm bảo các container con có item phù hợp trước khi show form
             initializeChildContainers(sourceDatabaseDc.getItemOrNull());
-
             switch (dbType) {
                 case POSTGRES:
                     // đảm bảo có SourcePostgresDTO trong postgresDc
                     if (postgresDc.getItemOrNull() == null) {
                         SourcePostgresDTO pg = extractOrCreatePostgresDTO(sourceDatabaseDc.getItem());
                         postgresDc.setItem(pg);
-
                     }
                     postgresForm.setVisible(true);
                     break;
@@ -336,14 +340,21 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                     mssqlForm.setVisible(true);
                     break;
                 case MYSQL:
-//                    if (mysqlDc.getItemOrNull() == null) {
-//                        SourceMysqlDTO mysql = extractOrCreateMySQLDTO(sourceDatabaseDc.getItem());
-//                        mysqlDc.setItem(mysql);
-//                    }
-//                    break;
+                    if (mysqlDc.getItemOrNull() == null) {
+                        SourceMysqlDTO mysql = extractOrCreateMySQLDTO(sourceDatabaseDc.getItem());
+                        mysqlDc.setItem(mysql);
+                    }
+                    mysqlForm.setVisible(true);
+                    schemas.setVisible(false);
+                    if (!StringUtils.isBlank(schemas.getValue())) {
+                        schemas.setValue("");
+                    }
+                    break;
             }
         }
     }
+
+
 
     private void visibleFieldsBySshTunnelMethod(SourceSSHTunnelMethod tunnelMethod) {
         passwordAuthForm.setVisible(false);
@@ -414,5 +425,59 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
         postgresVerifyForm.setVisible(false);
         passwordAuthForm.setVisible(false);
         sshKeyAuthForm.setVisible(false);
+        mysqlForm.setVisible(false);
+        schemas.setVisible(false);
     }
+
+    //MySQL
+    @Subscribe(id = "mysqlDc", target = Target.DATA_CONTAINER)
+    public void onMysqlDcItemPropertyChange(
+            InstanceContainer.ItemPropertyChangeEvent<SourceMysqlDTO> event) {
+
+        if ("encryption".equals(event.getProperty()) && event.getValue() != null) {
+            SourceMySQEncryptionModes mode =
+                    (event.getValue() instanceof SourceMySQEncryptionModes)
+                            ? (SourceMySQEncryptionModes) event.getValue()
+                            : SourceMySQEncryptionModes.fromId(event.getValue().toString());
+            encryptionMySQLCertificateForm(mode);
+        }
+        if ("replicationMethod".equals(event.getProperty()) && event.getValue() != null) {
+            SourcePostgresUpdateMethod updateMethod =
+                    (event.getValue() instanceof SourcePostgresUpdateMethod)
+                            ? (SourcePostgresUpdateMethod) event.getValue()
+                            : SourcePostgresUpdateMethod.fromId(event.getValue().toString());
+            updateMySQLUpdateMethodForm(updateMethod);
+        }
+    }
+
+
+    private void encryptionMySQLCertificateForm(SourceMySQEncryptionModes encryptionMode) {
+        mysqlCertificate.setVisible(false);
+        if (encryptionMode != null) {
+            switch (encryptionMode) {
+                case VERIFY_CA:
+                    mysqlCertificate.setVisible(true);
+                    break;
+                case VERIFY_IDENTITY:
+                    mysqlCertificate.setVisible(true);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void updateMySQLUpdateMethodForm(SourcePostgresUpdateMethod updateMethod) {
+        mysqlupdatemethod.setVisible(false);
+        if (updateMethod != null) {
+            switch (updateMethod) {
+                case CDC:
+                    mysqlupdatemethod.setVisible(true);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 }

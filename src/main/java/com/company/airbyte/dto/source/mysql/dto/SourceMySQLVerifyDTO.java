@@ -1,14 +1,9 @@
 package com.company.airbyte.dto.source.mysql.dto;
 
-import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import jakarta.persistence.Entity;
-
-import java.util.UUID;
 
 @JmixEntity
-public class SourceMySQLVerifyCaDTO {
+public class SourceMySQLVerifyDTO {
     private String caCertificate;
 
     private String clientCertificate;
