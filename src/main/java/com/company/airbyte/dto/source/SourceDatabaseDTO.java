@@ -4,6 +4,9 @@ import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethodDTO;
 import com.company.airbyte.entity.DatabaseType;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.Objects;
 
@@ -12,14 +15,19 @@ public class SourceDatabaseDTO extends SourceDTO {
 
     private String databaseType;
 
+    @NotBlank
     private String host;
 
+    @NotNull
+    @Pattern(regexp = "\\d+", message = "Chỉ được nhập số")
     private Long port;
 
+    @NotBlank
     private String database;
 
     private String schemas;
 
+    @NotBlank
     private String username;
 
     private String password;

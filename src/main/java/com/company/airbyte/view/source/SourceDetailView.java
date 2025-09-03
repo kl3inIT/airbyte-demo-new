@@ -4,6 +4,8 @@ import com.company.airbyte.dto.source.SourceDTO;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
+import com.company.airbyte.dto.source.postgres.SourcePostgresSSLModes;
+import com.company.airbyte.dto.source.postgres.SourcePostgresUpdateMethod;
 import com.company.airbyte.entity.DatabaseType;
 import com.company.airbyte.entity.Source;
 import com.company.airbyte.entity.SourceType;
@@ -65,6 +67,9 @@ public class SourceDetailView extends StandardDetailView<Source> {
                     SourcePostgresDTO pg = metadata.create(SourcePostgresDTO.class);
                     pg.setDatabaseType(DatabaseType.POSTGRES);
                     pg.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL);
+                    pg.setSslMode(SourcePostgresSSLModes.DISABLE);
+                    pg.setReplicationMethod(SourcePostgresUpdateMethod.CDC);
+                    pg.setSchemas("public");
                     source.setConfiguration(pg);
                     break;
                 }

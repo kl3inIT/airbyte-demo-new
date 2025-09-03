@@ -1,15 +1,21 @@
 package com.company.airbyte.dto.source.common;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @JmixEntity
 public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
+    @NotBlank
     private String tunnelHost;
 
-    private Long tunnelPort;
+    @NotBlank
+    private Integer tunnelPort = 22;
 
+    @NotBlank
     private String tunnelUser;
 
+    @NotBlank
     private String tunnelUserPassword;
 
     public String getTunnelHost() {
@@ -20,11 +26,11 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
         this.tunnelHost = tunnelHost;
     }
 
-    public Long getTunnelPort() {
+    public Integer getTunnelPort() {
         return tunnelPort;
     }
 
-    public void setTunnelPort(Long tunnelPort) {
+    public void setTunnelPort(Integer tunnelPort) {
         this.tunnelPort = tunnelPort;
     }
 

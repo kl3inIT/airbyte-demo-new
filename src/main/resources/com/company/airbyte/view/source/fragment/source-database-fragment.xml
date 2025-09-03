@@ -70,6 +70,7 @@
 
                 <comboBox property="tunnelMethod"
                           label="msg://sourceDatabaseFragment.sshLabel"
+                          required="true"
                           placeholder="msg://sourceDatabaseFragment.sshPlaceholder"/>
 
             </formLayout>
@@ -95,6 +96,7 @@
                         <textField property="tunnelPort"
                                    label="msg://sourceDatabaseFragment.tunnelPortLabel"
                                    placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"
+                                   required="true"
                                    width="100%"/>
 
                         <textField property="tunnelUser"
@@ -165,6 +167,7 @@
                                   property="sslMode"
                                   label="msg://sourceDatabaseFragment.sslLabel"
                                   placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
+                                  required="true"
                                   width="100%"/>
 
                         <!-- Postgres SSL Certificate Form (chung cho cả verify-ca và verify-full) -->
@@ -210,6 +213,7 @@
                         <comboBox id="postgresReplicationMethodComboBox"
                                   property="replicationMethod"
                                   label="msg://sourceDatabaseFragment.replicationLabel"
+                                  required="true"
                                   placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
                                   width="100%"/>
 
@@ -240,12 +244,12 @@
                                    requiredMessage="msg://sourceDatabaseFragment.publicationRequired"
                                    width="100%"/>
 
-                        <textField property="initialWaitingSeconds"
+                        <integerField property="initialWaitingSeconds"
                                    label="msg://sourceDatabaseFragment.initialWaitingSecondsLabel"
                                    placeholder="msg://sourceDatabaseFragment.initialWaitingSecondsPlaceholder"
                                    width="100%"/>
 
-                        <textField property="queueSize"
+                        <integerField property="queueSize"
                                    label="msg://sourceDatabaseFragment.queueSizeLabel"
                                    placeholder="msg://sourceDatabaseFragment.queueSizePlaceholder"
                                    width="100%"/>
@@ -265,7 +269,7 @@
                                   placeholder="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorPlaceholder"
                                   width="100%"/>
 
-                        <textField property="initialLoadTimeoutHours"
+                        <integerField property="initialLoadTimeoutHours"
                                    label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
                                    placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"
                                    width="100%"/>

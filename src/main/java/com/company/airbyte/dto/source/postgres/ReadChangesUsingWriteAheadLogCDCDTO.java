@@ -1,17 +1,20 @@
 package com.company.airbyte.dto.source.postgres;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.validation.constraints.NotBlank;
 
 @JmixEntity
 public class ReadChangesUsingWriteAheadLogCDCDTO {
 
+    @NotBlank
     private String replicationSlot;
 
+    @NotBlank
     private String publication;
 
-    private Long initialWaitingSeconds;
+    private Integer initialWaitingSeconds = 1200;
 
-    private Long queueSize;
+    private Integer queueSize = 10000;
 
     private String lsnCommitBehaviour;
 
@@ -19,7 +22,7 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
 
     private String invalidCdcCursorPositionBehavior;
 
-    private Long initialLoadTimeoutHours;
+    private Integer initialLoadTimeoutHours = 8;
 
     private String plugin;
 
@@ -56,19 +59,19 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
         this.publication = publication;
     }
 
-    public Long getInitialWaitingSeconds() {
+    public Integer getInitialWaitingSeconds() {
         return initialWaitingSeconds;
     }
 
-    public void setInitialWaitingSeconds(Long initialWaitingSeconds) {
+    public void setInitialWaitingSeconds(Integer initialWaitingSeconds) {
         this.initialWaitingSeconds = initialWaitingSeconds;
     }
 
-    public Long getQueueSize() {
+    public Integer getQueueSize() {
         return queueSize;
     }
 
-    public void setQueueSize(Long queueSize) {
+    public void setQueueSize(Integer queueSize) {
         this.queueSize = queueSize;
     }
 
@@ -80,11 +83,11 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
         this.heartbeatActionQuery = heartbeatActionQuery;
     }
 
-    public Long getInitialLoadTimeoutHours() {
+    public Integer getInitialLoadTimeoutHours() {
         return initialLoadTimeoutHours;
     }
 
-    public void setInitialLoadTimeoutHours(Long initialLoadTimeoutHours) {
+    public void setInitialLoadTimeoutHours(Integer initialLoadTimeoutHours) {
         this.initialLoadTimeoutHours = initialLoadTimeoutHours;
     }
 
