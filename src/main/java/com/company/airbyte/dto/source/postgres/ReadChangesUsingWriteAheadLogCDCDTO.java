@@ -6,12 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 @JmixEntity
 public class ReadChangesUsingWriteAheadLogCDCDTO {
 
-    @NotBlank
     private String replicationSlot;
 
-    @NotBlank
-    private String publication;
 
+    private String publication;
     private Long initialWaitingSeconds ;
 
     private Long queueSize ;
