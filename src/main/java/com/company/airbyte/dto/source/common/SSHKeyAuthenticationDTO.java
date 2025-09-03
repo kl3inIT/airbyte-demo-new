@@ -9,7 +9,7 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
     @NotBlank
     private String tunnelHost;
 
-    @NotBlank
+    @NotNull
     private Long tunnelPort;
 
     @NotBlank
