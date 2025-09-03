@@ -4,14 +4,14 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 import org.springframework.lang.Nullable;
 
 
-public enum SourceMssqlUpdateMethod implements EnumClass<String> {
+public enum SourceMssqlUpdateMethodType implements EnumClass<String> {
     CDC("CDC"),
     STANDARD("Standard");
     ;
 
     private final String id;
 
-    SourceMssqlUpdateMethod(String id) {
+    SourceMssqlUpdateMethodType(String id) {
         this.id = id;
     }
 
@@ -20,8 +20,8 @@ public enum SourceMssqlUpdateMethod implements EnumClass<String> {
     }
 
     @Nullable
-    public static SourceMssqlUpdateMethod fromId(String id) {
-        for (SourceMssqlUpdateMethod at : SourceMssqlUpdateMethod.values()) {
+    public static SourceMssqlUpdateMethodType fromId(String id) {
+        for (SourceMssqlUpdateMethodType at : SourceMssqlUpdateMethodType.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }

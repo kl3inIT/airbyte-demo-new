@@ -20,5 +20,27 @@ public class AzBlobAzureBlobStorageDTO {
 
     private String storageAccount;
 
+    public String getSasToken() {
+        return sasToken;
+    }
 
+    public void setSasToken(String sasToken) {
+        this.sasToken = sasToken;
+    }
+
+    public String getSharedKey() {
+        return sharedKey;
+    }
+
+    public void setSharedKey(String sharedKey) {
+        this.sharedKey = sharedKey;
+    }
+
+    public String getStorageAccount() {
+        return storageAccount;
+    }
+
+    public void setStorageAccount(String storageAccount) {
+        this.storageAccount = storageAccount;
+    }
 }

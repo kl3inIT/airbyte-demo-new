@@ -5,7 +5,7 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 import org.springframework.lang.Nullable;
 
 
-public enum StorageType implements EnumClass<String> {
+public enum StorageProviderType implements EnumClass<String> {
     HTTPS("HTTPS"),
     GCS("GCS"),
     S3("S3"),
@@ -17,7 +17,7 @@ public enum StorageType implements EnumClass<String> {
 
     private final String id;
 
-    StorageType(String id) {
+    StorageProviderType(String id) {
         this.id = id;
     }
 
@@ -26,8 +26,8 @@ public enum StorageType implements EnumClass<String> {
     }
 
     @Nullable
-    public static StorageType fromId(String id) {
-        for (StorageType at : StorageType.values()) {
+    public static StorageProviderType fromId(String id) {
+        for (StorageProviderType at : StorageProviderType.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }
