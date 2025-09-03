@@ -1,9 +1,150 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
     <data>
-        <instance id="sourceFileDc" class="com.company.airbyte.dto.source.file.SourceFileDTO"/>
-    </data>
-    <content>
+        <!-- Lấy item từ màn cha -->
+        <instance id="sourceFileDc"
+                  class="com.company.airbyte.dto.source.file.SourceFileDTO"
+                  provided="true"/>
 
+        <!-- Provider DTO containers -->
+        <instance id="s3Dc"
+                  class="com.company.airbyte.dto.source.file.S3AmazonWebServicesDTO"/>
+        <instance id="gcsDc"
+                  class="com.company.airbyte.dto.source.file.GCSGoogleCloudStorageDTO"/>
+        <instance id="azBlobDc"
+                  class="com.company.airbyte.dto.source.file.AzBlobAzureBlobStorageDTO"/>
+        <instance id="httpsDc"
+                  class="com.company.airbyte.dto.source.file.HTTPSPublicWebDTO"/>
+        <instance id="sshLikeDc"
+                  class="com.company.airbyte.dto.source.common.SSH_SCP_SFTP_ProtocolDTO"/>
+    </data>
+
+    <content>
+        <vbox id="root" width="100%" padding="false" spacing="false" margin="false"
+              expand="providerFormsBox">
+
+            <!-- Cấu hình chi tiết - File -->
+            <h3 text="msg://sourceFileFragment.title"/>
+            <formLayout id="detailForm" dataContainer="sourceFileDc" width="100%">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+
+                <textField property="datasetName"
+                           label="msg://sourceFileFragment.datasetNameLabel"
+                           placeholder="msg://sourceFileFragment.datasetNamePlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceFileFragment.datasetNameRequired"/>
+
+                <comboBox property="format"
+                          label="msg://sourceFileFragment.formatLabel"
+                          placeholder="msg://sourceFileFragment.formatPlaceholder"
+                          required="true"
+                          requiredMessage="msg://sourceFileFragment.formatRequired"/>
+
+                <comboBox property="provider"
+                          label="msg://sourceFileFragment.providerLabel"
+                          placeholder="msg://sourceFileFragment.providerPlaceholder"
+                          required="true"
+                          requiredMessage="msg://sourceFileFragment.providerRequired"/>
+
+
+                <textField property="readerOptions"
+                           label="msg://sourceFileFragment.readerOptionsLabel"
+                           placeholder="msg://sourceFileFragment.readerOptionsPlaceholder"/>
+
+            </formLayout>
+
+            <!-- Khối form con theo provider -->
+            <vbox id="providerFormsBox" width="100%" spacing="false" margin="false" padding="false"
+                  classNames="ssl-cert-box" visible="false" css="margin-top: 16px">
+
+                <!-- S3 -->
+                <formLayout id="s3Form" dataContainer="s3Dc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.s3.title"/>
+                    <textField property="awsAccessKeyId"
+                               label="msg://sourceFileFragment.s3.awsAccessKeyLabel"
+                               placeholder="msg://sourceFileFragment.s3.awsAccessKeyPlaceholder"/>
+                    <passwordField property="awsSecretAccessKey"
+                                   label="msg://sourceFileFragment.s3.awsSecretKeyLabel"
+                                   placeholder="msg://sourceFileFragment.s3.awsSecretKeyPlaceholder"/>
+                </formLayout>
+
+                <!-- GCS -->
+                <formLayout id="gcsForm" dataContainer="gcsDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.gcs.title"/>
+                    <textArea property="serviceAccountJson"
+                              label="msg://sourceFileFragment.gcs.serviceAccountLabel"
+                              placeholder="msg://sourceFileFragment.gcs.serviceAccountPlaceholder"/>
+                </formLayout>
+
+                <!-- Azure Blob -->
+                <formLayout id="azBlobForm" dataContainer="azBlobDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.az.title"/>
+                    <textField property="storageAccount"
+                               label="msg://sourceFileFragment.az.storageAccountLabel"
+                               placeholder="msg://sourceFileFragment.az.storageAccountPlaceholder"/>
+                    <textField property="sasToken"
+                               label="msg://sourceFileFragment.az.sasTokenLabel"
+                               placeholder="msg://sourceFileFragment.az.sasTokenPlaceholder"/>
+                    <passwordField property="sharedKey"
+                                   label="msg://sourceFileFragment.az.sharedKeyLabel"
+                                   placeholder="msg://sourceFileFragment.az.sharedKeyPlaceholder"/>
+                </formLayout>
+
+                <!-- HTTPS Public -->
+                <formLayout id="httpsForm" dataContainer="httpsDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.https.title"/>
+                    <switch property="userAgent"
+                            label="msg://sourceFileFragment.https.userAgentLabel"/>
+                </formLayout>
+
+                <!-- SSH / SCP / SFTP -->
+                <formLayout id="sshLikeForm" dataContainer="sshLikeDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.ssh.title"/>
+                    <textField property="host"
+                               label="msg://sourceFileFragment.ssh.hostLabel"
+                               placeholder="msg://sourceFileFragment.ssh.hostPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceFileFragment.ssh.hostRequired"/>
+                    <textField property="port"
+                               label="msg://sourceFileFragment.ssh.portLabel"
+                               placeholder="msg://sourceFileFragment.ssh.portPlaceholder"/>
+                    <textField property="user"
+                               label="msg://sourceFileFragment.ssh.userLabel"
+                               placeholder="msg://sourceFileFragment.ssh.userPlaceholder"/>
+                    <passwordField property="password"
+                                   label="msg://sourceFileFragment.ssh.passwordLabel"
+                                   placeholder="msg://sourceFileFragment.ssh.passwordPlaceholder"/>
+                </formLayout>
+            </vbox>
+
+            <textField property="url"
+                       dataContainer="sourceFileDc"
+                       label="msg://sourceFileFragment.urlLabel"
+                       placeholder="msg://sourceFileFragment.urlPlaceholder"
+                       width="100%"/>
+        </vbox>
     </content>
 </fragment>

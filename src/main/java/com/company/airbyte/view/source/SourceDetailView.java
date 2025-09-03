@@ -16,6 +16,7 @@ import com.company.airbyte.entity.SourceType;
 import com.company.airbyte.service.AirbyteService;
 import com.company.airbyte.view.main.MainView;
 import com.company.airbyte.view.source.fragment.SourceDatabaseFragment;
+import com.company.airbyte.view.source.fragment.SourceFileFragment;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.Metadata;
@@ -50,6 +51,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
     private SourceDatabaseFragment sourceDatabaseFragment;
     @Autowired
     private Notifications notifications;
+
+    private SourceFileFragment sourceFileFragment;
 
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
@@ -121,7 +124,20 @@ public class SourceDetailView extends StandardDetailView<Source> {
                     break;
                 }
                 case FILE: {
+                    sourceFileFragment = fragments.create(this, SourceFileFragment.class);
 
+                    SourceDTO cfg = getEditedEntity().getConfiguration();
+                    SourceFileDTO sourceFileDTO;
+                    if (cfg instanceof SourceFileDTO) {
+                        sourceFileDTO = (SourceFileDTO) cfg;
+                    } else {
+                        sourceFileDTO = metadata.create(SourceFileDTO.class);
+                        getEditedEntity().setConfiguration(sourceFileDTO);
+                    }
+
+                    sourceFileFragment.setItem(sourceFileDTO);
+                    sourceDetailVbox.add(sourceFileFragment);
+                    break;
                 }
             }
         }
@@ -158,9 +174,32 @@ public class SourceDetailView extends StandardDetailView<Source> {
                     }
                     break;
                 }
-                case FILE: {
+                case FILE:
+                    if (sourceFileFragment != null) {
+                        SourceFileDTO fileDto = sourceFileFragment.getItem();
+                        source.setConfiguration(fileDto);
+                    }
 
-                }
+                    try {
+                        SourceResponse resp = airbyteService.upsertSourceOnAirbyte(source);
+
+                        if (resp.sourceId() != null) {
+                            source.setSourceID(UUID.fromString(resp.sourceId()));
+                        }
+                        if (resp.workspaceId() != null) {
+                            source.setWorkspaceId(UUID.fromString(resp.workspaceId()));
+                        }
+
+                        // File -> lưu dạng bảng
+                        source.setDataFormat(DataFormat.TABLE);
+                        getViewData().getDataContext().setModified(source, true);
+
+                    } catch (Exception ex) {
+                        event.preventSave();
+                        notifications.create("Airbyte create source failed")
+                                .withType(Notifications.Type.ERROR).show();
+                    }
+                    break;
             }
         }
     }

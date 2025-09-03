@@ -11,6 +11,9 @@
         <!-- THÊM: container cho cấu hình DB DTO -->
         <instance id="sourceDatabaseDc"
                   class="com.company.airbyte.dto.source.SourceDatabaseDTO"/>
+
+        <instance id="sourceFileDc"
+                  class="com.company.airbyte.dto.source.file.SourceFileDTO"/>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
