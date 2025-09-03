@@ -16,31 +16,26 @@ import java.util.UUID;
 @Table(name = "SOURCE")
 @Entity
 public class Source extends BaseEntity {
-    @Column(name = "SOURCE_ID", nullable = false)
-    @NotNull
+    @Column(name = "SOURCE_ID")
     private UUID sourceID;
 
-    @Column(name = "DEFINITION_ID", nullable = false)
-    @NotNull
+    @Column(name = "DEFINITION_ID")
     private UUID definitionId;
 
-    @Column(name = "WORKSPACE_ID", nullable = false)
-    @NotNull
+    @Column(name = "WORKSPACE_ID")
     private UUID workspaceId;
 
-    @Column(name = "SOURCE_TYPE", nullable = false)
+    @Column(name = "SOURCE_TYPE")
     @NotNull
     private String sourceType;
 
-    @Column(name = "PROVIDER_UNIT", nullable = false)
+    @Column(name = "PROVIDER_UNIT")
     @NotNull
     private String providerUnit;
 
-    @Column(name = "DATA_FORMAT", nullable = false)
-    @NotNull
+    @Column(name = "DATA_FORMAT")
     private String dataFormat;
 
-    @InstanceName
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
 

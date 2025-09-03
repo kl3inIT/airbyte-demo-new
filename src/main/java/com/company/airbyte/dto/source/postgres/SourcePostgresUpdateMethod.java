@@ -6,8 +6,8 @@ import org.springframework.lang.Nullable;
 
 public enum SourcePostgresUpdateMethod implements EnumClass<String> {
     CDC("CDC"),
-    XMIN("Xmin"),
-    STANDARD("Standard");
+    XMIN("XMIN"),
+    STANDARD("STANDARD");
 
     private final String id;
 

@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
     <data>
-        <instance id="sourceDatabaseDc" class="com.company.airbyte.dto.source.SourceDatabaseDTO" provided="true"></instance>
-        <instance id="postgresDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresDTO"></instance>
-        <instance id="mssqlDc" class="com.company.airbyte.dto.source.mssql.SourceMssqlDTO"></instance>
-        <instance id="passwordAuthDc" class="com.company.airbyte.dto.source.common.PasswordAuthenticationDTO"></instance>
-        <instance id="sshKeyAuthDc" class="com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO"></instance>
-        <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO"></instance>
-        <instance id="mysqlDc" class="com.company.airbyte.dto.source.mysql.dto.SourceMysqlDTO"></instance>
+
+        <instance id="sourceDatabaseDc"
+                  class="com.company.airbyte.dto.source.SourceDatabaseDTO" provided="true">
+
+        </instance>
+        <instance id="postgresDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresDTO">
+        </instance>
+        <instance id="mssqlDc" class="com.company.airbyte.dto.source.mssql.SourceMssqlDTO">
+        </instance>
+        <instance id="passwordAuthDc" class="com.company.airbyte.dto.source.common.PasswordAuthenticationDTO">
+        </instance>
+        <instance id="sshKeyAuthDc" class="com.company.airbyte.dto.source.common.SSHKeyAuthenticationDTO">
+        </instance>
+        <instance id="postgresVerifyDc" class="com.company.airbyte.dto.source.postgres.SourcePostgresVerifyDTO">
+        </instance>
+
+        <instance id="postgresCdcDc" class="com.company.airbyte.dto.source.postgres.ReadChangesUsingWriteAheadLogCDCDTO">
+        </instance>
+
+        <instance id="mysqlDc" class="com.company.airbyte.dto.source.mysql.dto.SourceMysqlDTO"/>
+
     </data>
 
     <content>
-        <vbox id="root" width="100%" padding="true">
+        <vbox id="root" width="100%" padding="false" spacing="false" margin="false" expand="specificFieldsContainer">
             <h3 text="msg://sourceDatabaseFragment.title">
             </h3>
             <formLayout id="sourceDatabaseDTOForm" dataContainer="sourceDatabaseDc" width="100%">
@@ -63,149 +77,226 @@
 
             </formLayout>
             <!-- SSH Tunnel Method Forms -->
-            <vbox id="sshTunnelContainer" width="100%" spacing="false">
+            <vbox id="sshTunnelContainer" width="100%" spacing="false" margin="false" padding="false">
 
                 <!-- Password Authentication Form -->
                 <formLayout id="passwordAuthForm" dataContainer="passwordAuthDc" width="100%" visible="false">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
 
-                    <h4 text="msg://sourceDatabaseFragment.sshTunnelPasswordTitle"/>
+                    <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
+                        <h4 text="msg://sourceDatabaseFragment.sshTunnelPasswordTitle" width="100%"/>
 
-                    <textField property="tunnelHost"
-                               label="msg://sourceDatabaseFragment.tunnelHostLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"/>
-
-                    <textField property="tunnelPort"
-                               label="msg://sourceDatabaseFragment.tunnelPortLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"/>
-
-                    <textField property="tunnelUser"
-                               label="msg://sourceDatabaseFragment.tunnelUserLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"/>
-
-                    <passwordField property="tunnelUserPassword"
-                                   label="msg://sourceDatabaseFragment.tunnelPasswordLabel"
-                                   placeholder="msg://sourceDatabaseFragment.tunnelPasswordPlaceholder"
+                        <textField property="tunnelHost"
+                                   label="msg://sourceDatabaseFragment.tunnelHostLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
                                    required="true"
-                                   requiredMessage="msg://sourceDatabaseFragment.tunnelPasswordRequired"/>
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"
+                                   width="100%"/>
+
+                        <textField property="tunnelPort"
+                                   label="msg://sourceDatabaseFragment.tunnelPortLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"
+                                   width="100%"/>
+
+                        <textField property="tunnelUser"
+                                   label="msg://sourceDatabaseFragment.tunnelUserLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"
+                                   width="100%"/>
+
+                        <passwordField property="tunnelUserPassword"
+                                       label="msg://sourceDatabaseFragment.tunnelPasswordLabel"
+                                       placeholder="msg://sourceDatabaseFragment.tunnelPasswordPlaceholder"
+                                       required="true"
+                                       requiredMessage="msg://sourceDatabaseFragment.tunnelPasswordRequired"
+                                       width="100%"/>
+                    </vbox>
                 </formLayout>
 
                 <!-- SSH Key Authentication Form -->
                 <formLayout id="sshKeyAuthForm" dataContainer="sshKeyAuthDc" width="100%" visible="false">
-
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
 
-                    <h4 text="msg://sourceDatabaseFragment.sshTunnelKeyTitle"/>
+                    <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
 
-                    <textField property="tunnelHost"
-                               label="msg://sourceDatabaseFragment.tunnelHostLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"/>
+                        <h4 text="msg://sourceDatabaseFragment.sshTunnelKeyTitle" width="100%"/>
 
-                    <textField property="tunnelPort"
-                               label="msg://sourceDatabaseFragment.tunnelPortLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"/>
-
-                    <textField property="tunnelUser"
-                               label="msg://sourceDatabaseFragment.tunnelUserLabel"
-                               placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
-                               required="true"
-                               requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"/>
-
-                    <passwordField property="tunnelUserPassword"
-                                   label="msg://sourceDatabaseFragment.sshKeyLabel"
-                                   placeholder="msg://sourceDatabaseFragment.sshKeyPlaceholder"
+                        <textField property="tunnelHost"
+                                   label="msg://sourceDatabaseFragment.tunnelHostLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelHostPlaceholder"
                                    required="true"
-                                   requiredMessage="msg://sourceDatabaseFragment.sshKeyRequired"/>
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelHostRequired"
+                                   width="100%"/>
+
+                        <textField property="tunnelPort"
+                                   label="msg://sourceDatabaseFragment.tunnelPortLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelPortPlaceholder"
+                                   width="100%"/>
+
+                        <textField property="tunnelUser"
+                                   label="msg://sourceDatabaseFragment.tunnelUserLabel"
+                                   placeholder="msg://sourceDatabaseFragment.tunnelUserPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"
+                                   width="100%"/>
+
+                        <passwordField property="tunnelUserPassword"
+                                       label="msg://sourceDatabaseFragment.sshKeyLabel"
+                                       placeholder="msg://sourceDatabaseFragment.sshKeyPlaceholder"
+                                       required="true"
+                                       requiredMessage="msg://sourceDatabaseFragment.sshKeyRequired"
+                                       width="100%"/>
+                    </vbox>
                 </formLayout>
 
             </vbox>
-            <vbox id="specificFieldsContainer" width="100%" spacing="true">
+            <vbox id="specificFieldsContainer" width="100%" spacing="false" margin="false" padding="false">
                 <!-- Postgres specific fields -->
-                <formLayout id="postgresForm" dataContainer="postgresDc" width="100%" visible="false">
+                <formLayout id="postgresForm" dataContainer="postgresDc" visible="false">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
 
-                    <comboBox id="postgresSslModeComboBox"
-                              property="sslMode"
-                              label="msg://sourceDatabaseFragment.sslLabel"
-                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
+                    <vbox width="100%" padding="false" margin="false" spacing="false">
 
-                    <comboBox id="postgresReplicationMethodComboBox"
-                              property="replicationMethod"
-                              label="msg://sourceDatabaseFragment.replicationLabel"
-                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"/>
+                        <comboBox id="postgresSslModeComboBox"
+                                  property="sslMode"
+                                  label="msg://sourceDatabaseFragment.sslLabel"
+                                  placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
+                                  width="100%"/>
+
+                        <!-- Postgres SSL Certificate Form (chung cho cả verify-ca và verify-full) -->
+                        <formLayout id="postgresVerifyForm" dataContainer="postgresVerifyDc" width="100%"
+                                    visible="false">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                            </responsiveSteps>
+
+                            <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
+
+                                <h4 text="msg://sourceDatabaseFragment.sslCertificateTitle" width="100%"/>
+
+                                <textArea property="caCertificate"
+                                          label="msg://sourceDatabaseFragment.caCertificateLabel"
+                                          placeholder="msg://sourceDatabaseFragment.caCertificatePlaceholder"
+                                          required="true"
+                                          requiredMessage="msg://sourceDatabaseFragment.caCertificateRequired"
+                                          width="100%"/>
+
+                                <textArea id="clientCertificateField"
+                                          property="clientCertificate"
+                                          label="msg://sourceDatabaseFragment.clientCertificateLabel"
+                                          placeholder="msg://sourceDatabaseFragment.clientCertificatePlaceholder"
+                                          width="100%"/>
+
+                                <textArea id="clientKeyField"
+                                          property="clientKey"
+                                          label="msg://sourceDatabaseFragment.clientKeyLabel"
+                                          placeholder="msg://sourceDatabaseFragment.clientKeyPlaceholder"
+                                          width="100%"/>
+
+                                <passwordField id="clientKeyPasswordField"
+                                               property="clientKeyPassword"
+                                               label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
+                                               placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"
+                                               width="100%"/>
+                            </vbox>
+                        </formLayout>
+                    </vbox>
+
+                    <vbox width="100%" padding="false" margin="false" spacing="false">
+                        <comboBox id="postgresReplicationMethodComboBox"
+                                  property="replicationMethod"
+                                  label="msg://sourceDatabaseFragment.replicationLabel"
+                                  placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
+                                  width="100%"/>
+
+                    </vbox>
+                </formLayout>
+
+                <!-- Postgres CDC Form -->
+                <formLayout id="postgresCdcForm" dataContainer="postgresCdcDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <vbox width="100%" spacing="false" css="margin-top: 16px" classNames="ssl-cert-box">
+
+                        <h4 text="msg://sourceDatabaseFragment.cdcConfigurationTitle" width="100%"/>
+
+                        <textField property="replicationSlot"
+                                   label="msg://sourceDatabaseFragment.replicationSlotLabel"
+                                   placeholder="msg://sourceDatabaseFragment.replicationSlotPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.replicationSlotRequired"
+                                   width="100%"/>
+
+                        <textField property="publication"
+                                   label="msg://sourceDatabaseFragment.publicationLabel"
+                                   placeholder="msg://sourceDatabaseFragment.publicationPlaceholder"
+                                   required="true"
+                                   requiredMessage="msg://sourceDatabaseFragment.publicationRequired"
+                                   width="100%"/>
+
+                        <textField property="initialWaitingSeconds"
+                                   label="msg://sourceDatabaseFragment.initialWaitingSecondsLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialWaitingSecondsPlaceholder"
+                                   width="100%"/>
+
+                        <textField property="queueSize"
+                                   label="msg://sourceDatabaseFragment.queueSizeLabel"
+                                   placeholder="msg://sourceDatabaseFragment.queueSizePlaceholder"
+                                   width="100%"/>
+
+                        <comboBox property="lsnCommitBehaviour"
+                                  label="msg://sourceDatabaseFragment.lsnCommitBehaviourLabel"
+                                  placeholder="msg://sourceDatabaseFragment.lsnCommitBehaviourPlaceholder"
+                                  width="100%"/>
+
+                        <textField property="heartbeatActionQuery"
+                                   label="msg://sourceDatabaseFragment.heartbeatActionQueryLabel"
+                                   placeholder="msg://sourceDatabaseFragment.heartbeatActionQueryPlaceholder"
+                                   width="100%"/>
+
+                        <comboBox property="invalidCdcCursorPositionBehavior"
+                                  label="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorLabel"
+                                  placeholder="msg://sourceDatabaseFragment.invalidCdcCursorPositionBehaviorPlaceholder"
+                                  width="100%"/>
+
+                        <textField property="initialLoadTimeoutHours"
+                                   label="msg://sourceDatabaseFragment.initialLoadTimeoutHoursLabel"
+                                   placeholder="msg://sourceDatabaseFragment.initialLoadTimeoutHoursPlaceholder"
+                                   width="100%"/>
+                    </vbox>
                 </formLayout>
 
                 <!-- MSSQL specific fields -->
                 <formLayout id="mssqlForm" dataContainer="mssqlDc" width="100%" visible="false">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
                     </responsiveSteps>
 
-                    <comboBox id="mssqlSslMethodComboBox"
-                              property="sslMethod"
-                              label="msg://sourceDatabaseFragment.sslLabel"
-                              placeholder="msg://sourceDatabaseFragment.sslPlaceholder"/>
+                    <vbox width="100%" padding="false" spacing="false" margin="false">
+                        <comboBox id="mssqlSslMethodComboBox"
+                                  property="sslMethod"
+                                  label="msg://sourceDatabaseFragment.sslLabel"
+                                  placeholder="msg://sourceDatabaseFragment.sslPlaceholder"
+                                  width="100%"/>
 
-                    <comboBox id="mssqlReplicationMethodComboBox"
-                              property="replicationMethod"
-                              label="msg://sourceDatabaseFragment.replicationLabel"
-                              placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.replicationRequired"/>
+                        <comboBox id="mssqlReplicationMethodComboBox"
+                                  property="replicationMethod"
+                                  label="msg://sourceDatabaseFragment.replicationLabel"
+                                  placeholder="msg://sourceDatabaseFragment.replicationPlaceholder"
+                                  required="true"
+                                  requiredMessage="msg://sourceDatabaseFragment.replicationRequired"
+                                  width="100%"/>
+                    </vbox>
                 </formLayout>
-
-                <!-- Postgres SSL Certificate Form (chung cho cả verify-ca và verify-full) -->
-                <formLayout id="postgresVerifyForm" dataContainer="postgresVerifyDc" width="100%" visible="false">
-                    <responsiveSteps>
-                        <responsiveStep minWidth="0" columns="1"/>
-                    </responsiveSteps>
-
-                    <h4 text="msg://sourceDatabaseFragment.sslCertificateTitle"/>
-
-                    <textArea property="caCertificate"
-                              label="msg://sourceDatabaseFragment.caCertificateLabel"
-                              placeholder="msg://sourceDatabaseFragment.caCertificatePlaceholder"
-                              required="true"
-                              requiredMessage="msg://sourceDatabaseFragment.caCertificateRequired"
-                              height="150px"
-                              width="100%"/>
-                    >
-                    <textArea id="clientCertificateField"
-                              property="clientCertificate"
-                              label="msg://sourceDatabaseFragment.clientCertificateLabel"
-                              placeholder="msg://sourceDatabaseFragment.clientCertificatePlaceholder"
-                              height="150px"
-                              width="100%"/>
-
-                    <textArea id="clientKeyField"
-                              property="clientKey"
-                              label="msg://sourceDatabaseFragment.clientKeyLabel"
-                              placeholder="msg://sourceDatabaseFragment.clientKeyPlaceholder"
-                              height="150px"
-                              width="100%"/>
-
-                    <passwordField id="clientKeyPasswordField"
-                                   property="clientKeyPassword"
-                                   label="msg://sourceDatabaseFragment.clientKeyPasswordLabel"
-                                   placeholder="msg://sourceDatabaseFragment.clientKeyPasswordPlaceholder"/>
-                </formLayout>
-
 
                 <!-- MySQL specific fields -->
                 <formLayout id="mysqlForm" dataContainer="mysqlDc" width="100%" visible="false">
@@ -231,8 +322,10 @@
 
             </vbox>
             <textField property="jdbcUrlParams"
+                       dataContainer="sourceDatabaseDc" 
                        label="msg://sourceDatabaseFragment.jdbcLabel"
-                       placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"/>
+                       placeholder="msg://sourceDatabaseFragment.jdbcPlaceholder"
+                       width="100%"/>
         </vbox>
     </content>
 </fragment>
