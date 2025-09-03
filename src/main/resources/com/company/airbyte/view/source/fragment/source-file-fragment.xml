@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
+    <data>
+        <instance id="sourceFileDc" class="com.company.airbyte.dto.source.file.SourceFileDTO"/>
+    </data>
     <content>
-        <vbox id="root">
-        </vbox>
+
     </content>
 </fragment>
