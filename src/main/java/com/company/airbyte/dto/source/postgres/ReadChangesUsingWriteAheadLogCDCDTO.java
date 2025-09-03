@@ -23,20 +23,20 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
 
     private String plugin;
 
-    public LSNCommitBehaviour getLsnCommitBehaviour() {
-        return lsnCommitBehaviour == null ? null : LSNCommitBehaviour.fromId(lsnCommitBehaviour);
+    public LSNCommitBehaviourType getLsnCommitBehaviour() {
+        return lsnCommitBehaviour == null ? null : LSNCommitBehaviourType.fromId(lsnCommitBehaviour);
     }
 
-    public void setLsnCommitBehaviour(LSNCommitBehaviour lsnCommitBehaviour) {
-        this.lsnCommitBehaviour = lsnCommitBehaviour == null ? null : lsnCommitBehaviour.getId();
+    public void setLsnCommitBehaviour(LSNCommitBehaviourType lsnCommitBehaviourType) {
+        this.lsnCommitBehaviour = lsnCommitBehaviourType == null ? null : lsnCommitBehaviourType.getId();
     }
 
 
-    public SourcePostgresInvalidCDCPositionBehaviorAdvanced getInvalidCdcCursorPositionBehavior() {
-        return invalidCdcCursorPositionBehavior == null ? null : SourcePostgresInvalidCDCPositionBehaviorAdvanced.fromId(invalidCdcCursorPositionBehavior);
+    public SourcePostgresInvalidCDCPositionBehaviorAdvancedType getInvalidCdcCursorPositionBehavior() {
+        return invalidCdcCursorPositionBehavior == null ? null : SourcePostgresInvalidCDCPositionBehaviorAdvancedType.fromId(invalidCdcCursorPositionBehavior);
     }
 
-    public void setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvanced invalidCdcCursorPositionBehavior) {
+    public void setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvancedType invalidCdcCursorPositionBehavior) {
         this.invalidCdcCursorPositionBehavior = invalidCdcCursorPositionBehavior == null ? null : invalidCdcCursorPositionBehavior.getId();
     }
 

@@ -142,7 +142,7 @@
                                    requiredMessage="msg://sourceDatabaseFragment.tunnelUserRequired"
                                    width="100%"/>
 
-                        <passwordField property="tunnelUserPassword"
+                        <passwordField property="sshKey"
                                        label="msg://sourceDatabaseFragment.sshKeyLabel"
                                        placeholder="msg://sourceDatabaseFragment.sshKeyPlaceholder"
                                        required="true"

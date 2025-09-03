@@ -4,7 +4,7 @@ import io.jmix.core.metamodel.datatype.EnumClass;
 
 import org.springframework.lang.Nullable;
 
-public enum SourcePostgresSSLModes implements EnumClass<String> {
+public enum SourcePostgresSSLModesType implements EnumClass<String> {
     DISABLE("DISABLE"),
     ALLOW("ALLOW"),
     PREFER("PREFER"),
@@ -14,7 +14,7 @@ public enum SourcePostgresSSLModes implements EnumClass<String> {
 
     private final String id;
 
-    SourcePostgresSSLModes(String id) {
+    SourcePostgresSSLModesType(String id) {
         this.id = id;
     }
 
@@ -23,8 +23,8 @@ public enum SourcePostgresSSLModes implements EnumClass<String> {
     }
 
     @Nullable
-    public static SourcePostgresSSLModes fromId(String id) {
-        for (SourcePostgresSSLModes at : SourcePostgresSSLModes.values()) {
+    public static SourcePostgresSSLModesType fromId(String id) {
+        for (SourcePostgresSSLModesType at : SourcePostgresSSLModesType.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }

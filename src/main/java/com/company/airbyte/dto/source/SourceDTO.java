@@ -35,5 +35,4 @@ public class SourceDTO implements Serializable {
         return Objects.hash(id);
     }
 
-
 }

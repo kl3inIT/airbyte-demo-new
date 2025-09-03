@@ -10,7 +10,7 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
 
     private String tunnelUser;
 
-    private String tunnelUserPassword;
+    private String sshKey;
 
     public String getTunnelHost() {
         return tunnelHost;
@@ -36,11 +36,11 @@ public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
         this.tunnelUser = tunnelUser;
     }
 
-    public String getTunnelUserPassword() {
-        return tunnelUserPassword;
+    public String getSshKey() {
+        return sshKey;
     }
 
-    public void setTunnelUserPassword(String tunnelUserPassword) {
-        this.tunnelUserPassword = tunnelUserPassword;
+    public void setSshKey(String sshKey) {
+        this.sshKey = sshKey;
     }
 }
