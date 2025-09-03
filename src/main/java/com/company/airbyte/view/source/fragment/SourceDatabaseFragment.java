@@ -118,6 +118,11 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                         ReadChangesUsingWriteAheadLogCDCDTO cdcDTO = postgresDTO.getCdcDTO();
                         if (cdcDTO == null) {
                             cdcDTO = metadata.create(ReadChangesUsingWriteAheadLogCDCDTO.class);
+                            cdcDTO.setInitialWaitingSeconds(1200L);
+                            cdcDTO.setQueueSize(10000L);
+                            cdcDTO.setLsnCommitBehaviour(LSNCommitBehaviourType.AFTER_LOADING_DATA_IN_THE_DESTINATION);
+                            cdcDTO.setInvalidCdcCursorPositionBehavior(SourcePostgresInvalidCDCPositionBehaviorAdvancedType.FAIL_SYNC);
+                            cdcDTO.setInitialLoadTimeoutHours(8L);
                             postgresDTO.setCdcDTO(cdcDTO);
                         }
                         postgresCdcDc.setItem(cdcDTO);
@@ -329,6 +334,7 @@ public class SourceDatabaseFragment extends FragmentRenderer<VerticalLayout, Sou
                     // đảm bảo container có item để binding 2 chiều
                     if (passwordAuthDc.getItemOrNull() == null) {
                         PasswordAuthenticationDTO pwd = metadata.create(PasswordAuthenticationDTO.class);
+                        pwd.setTunnelPort(22L); // default port
                         passwordAuthDc.setItem(pwd);
                         SourceDatabaseDTO root = sourceDatabaseDc.getItemOrNull();
                         if (root != null) root.setSshTunnelMethod(pwd);

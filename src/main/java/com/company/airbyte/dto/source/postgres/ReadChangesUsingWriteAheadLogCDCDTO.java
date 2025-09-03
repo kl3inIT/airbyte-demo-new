@@ -1,17 +1,18 @@
 package com.company.airbyte.dto.source.postgres;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.validation.constraints.NotBlank;
 
 @JmixEntity
 public class ReadChangesUsingWriteAheadLogCDCDTO {
 
     private String replicationSlot;
 
+
     private String publication;
+    private Long initialWaitingSeconds ;
 
-    private Long initialWaitingSeconds;
-
-    private Long queueSize;
+    private Long queueSize ;
 
     private String lsnCommitBehaviour;
 
@@ -19,7 +20,7 @@ public class ReadChangesUsingWriteAheadLogCDCDTO {
 
     private String invalidCdcCursorPositionBehavior;
 
-    private Long initialLoadTimeoutHours;
+    private Long initialLoadTimeoutHours ;
 
     private String plugin;
 

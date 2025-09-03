@@ -1,13 +1,18 @@
 package com.company.airbyte.dto.source.common;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @JmixEntity
 public class SSHKeyAuthenticationDTO extends  SourceSSHTunnelMethodDTO {
+    @NotBlank
     private String tunnelHost;
 
+    @NotNull
     private Long tunnelPort;
 
+    @NotBlank
     private String tunnelUser;
 
     private String sshKey;

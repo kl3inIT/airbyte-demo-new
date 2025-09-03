@@ -1,10 +1,13 @@
 package com.company.airbyte.view.source;
 
+import com.airbyte.api.models.shared.SourcePostgresSSLModes;
 import com.airbyte.api.models.shared.SourceResponse;
 import com.company.airbyte.dto.source.SourceDTO;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
+import com.company.airbyte.dto.source.postgres.SourcePostgresSSLModesType;
+import com.company.airbyte.dto.source.postgres.SourcePostgresUpdateMethodType;
 import com.company.airbyte.entity.DataFormat;
 import com.company.airbyte.entity.DatabaseType;
 import com.company.airbyte.entity.Source;
@@ -76,8 +79,13 @@ public class SourceDetailView extends StandardDetailView<Source> {
             switch (requestedType) {
                 case DATABASE: {
                     SourcePostgresDTO pg = metadata.create(SourcePostgresDTO.class);
+                    source.setName("Postgres");
                     pg.setDatabaseType(DatabaseType.POSTGRES);
                     pg.setTunnelMethod(SourceSSHTunnelMethod.NO_TUNNEL);
+                    pg.setSslMode(SourcePostgresSSLModesType.DISABLE);
+                    pg.setReplicationMethod(SourcePostgresUpdateMethodType.CDC);
+                    pg.setSchemas("public");
+                    pg.setPort(5432L);
                     source.setConfiguration(pg);
                     break;
                 }
@@ -154,5 +162,5 @@ public class SourceDetailView extends StandardDetailView<Source> {
             }
         }
     }
-    
+
 }
