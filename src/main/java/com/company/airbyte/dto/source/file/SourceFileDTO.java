@@ -1,5 +1,9 @@
 package com.company.airbyte.dto.source.file;
 
+
+import com.airbyte.api.models.shared.FileFormat;
+import com.airbyte.api.models.shared.StorageProvider;
+
 import com.company.airbyte.dto.source.SourceDTO;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 

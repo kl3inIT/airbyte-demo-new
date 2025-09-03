@@ -33,7 +33,11 @@ public class SourceListView extends StandardListView<Source> {
 
     @Subscribe("sourcesDataGrid.createFile")
     public void onSourcesDataGridCreateFile(final ActionPerformedEvent event) {
-
+        String sourceType = SourceType.FILE.getId();
+        viewNavigators.detailView(this, Source.class)
+                .withQueryParameters(QueryParameters.of("type", sourceType))
+                .newEntity()
+                .navigate();
     }
 
     @Subscribe("sourcesDataGrid.createApi")

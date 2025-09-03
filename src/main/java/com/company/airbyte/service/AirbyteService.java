@@ -12,6 +12,7 @@ import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.postgres.*;
 import com.company.airbyte.entity.DatabaseType;
 import com.company.airbyte.entity.Source;
+import com.company.airbyte.entity.SourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,17 +39,40 @@ public class AirbyteService {
     public SourceResponse upsertSourceOnAirbyte(Source sourceEntity) {
         Objects.requireNonNull(sourceEntity, "Source entity cannot be null");
 
-        if (!(sourceEntity.getConfiguration() instanceof SourceDatabaseDTO sourceConfig)) {
-            throw new IllegalArgumentException("Unsupported configuration type: " +
-                    (sourceEntity.getConfiguration() == null ? "null" : sourceEntity.getConfiguration().getClass().getSimpleName()));
+        SourceType sourceType = sourceEntity.getSourceType();
+        if (sourceType == null) {
+            throw new IllegalArgumentException("Source type is required");
         }
 
-        DatabaseType databaseType = sourceConfig.getDatabaseType();
-        if (databaseType == null) {
-            throw new IllegalArgumentException("Database type is required");
+        SourceConfiguration airbyteConfiguration;
+        
+        switch (sourceType) {
+            case DATABASE:
+                if (!(sourceEntity.getConfiguration() instanceof SourceDatabaseDTO sourceConfig)) {
+                    throw new IllegalArgumentException("DATABASE source requires SourceDatabaseDTO configuration");
+                }
+                
+                DatabaseType databaseType = sourceConfig.getDatabaseType();
+                if (databaseType == null) {
+                    throw new IllegalArgumentException("Database type is required");
+                }
+                
+                airbyteConfiguration = buildAirbyteConfiguration(sourceConfig, databaseType);
+                break;
+                
+            case API:
+                // TODO: Support API source type
+                logger.warn("API source type is not yet supported");
+                throw new UnsupportedOperationException("API source type is not yet supported");
+                
+            case FILE:
+                // TODO: Support FILE source type
+                logger.warn("FILE source type is not yet supported");
+                throw new UnsupportedOperationException("FILE source type is not yet supported");
+                
+            default:
+                throw new IllegalArgumentException("Unsupported source type: " + sourceType);
         }
-
-        SourceConfiguration airbyteConfiguration = buildAirbyteConfiguration(sourceConfig, databaseType);
 
         if (sourceEntity.getSourceID() == null) {
             return createSourceOnAirbyte(sourceEntity, airbyteConfiguration);
@@ -145,8 +169,8 @@ public class AirbyteService {
                 break;
             case XMIN:
                 postgresBuilder.replicationMethod(Optional.of(SourcePostgresUpdateMethod.of(
-                        DetectChangesWithXminSystemColumn.builder().build()
-                )));
+                    DetectChangesWithXminSystemColumn.builder().build()
+            )));
                 break;
             case STANDARD:
                 postgresBuilder.replicationMethod(Optional.of(SourcePostgresUpdateMethod.of(
@@ -267,8 +291,8 @@ public class AirbyteService {
             default:
                 logger.warn("Unknown SSL mode: {}, using DISABLE as default", sslMode);
                 postgresBuilder.sslMode(Optional.of(SourcePostgresSSLModes.of(
-                        SourcePostgresDisable.builder().build()
-                )));
+                    SourcePostgresDisable.builder().build()
+            )));
                 break;
         }
     }
@@ -287,8 +311,8 @@ public class AirbyteService {
         switch (tunnelMethod) {
             case NO_TUNNEL:
                 postgresBuilder.tunnelMethod(Optional.of(SourcePostgresSSHTunnelMethod.of(
-                        SourcePostgresNoTunnel.builder().build()
-                )));
+                SourcePostgresNoTunnel.builder().build()
+        )));
                 break;
 
             case SSH_KEY_AUTH:
