@@ -4,6 +4,7 @@ import com.airbyte.api.models.shared.SourcePostgresSSLModes;
 import com.airbyte.api.models.shared.SourceResponse;
 import com.company.airbyte.dto.source.SourceDTO;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
+import com.company.airbyte.dto.source.file.SourceFileDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
 import com.company.airbyte.dto.source.postgres.SourcePostgresSSLModesType;
@@ -90,7 +91,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
                     break;
                 }
                 case FILE: {
-                    // TODO: Implement file source details
+                    SourceFileDTO file = metadata.create(SourceFileDTO.class);
+                    source.setConfiguration(file);
                     break;
                 }
                 case API: {
