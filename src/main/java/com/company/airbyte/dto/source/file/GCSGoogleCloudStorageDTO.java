@@ -15,4 +15,11 @@ public class GCSGoogleCloudStorageDTO {
 
     private String serviceAccountJson;
 
+    public String getServiceAccountJson() {
+        return serviceAccountJson;
+    }
+
+    public void setServiceAccountJson(String serviceAccountJson) {
+        this.serviceAccountJson = serviceAccountJson;
+    }
 }

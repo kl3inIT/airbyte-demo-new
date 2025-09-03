@@ -13,4 +13,11 @@ public class HTTPSPublicWebDTO {
 
     private Boolean userAgent;
 
+    public Boolean getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(Boolean userAgent) {
+        this.userAgent = userAgent;
+    }
 }
