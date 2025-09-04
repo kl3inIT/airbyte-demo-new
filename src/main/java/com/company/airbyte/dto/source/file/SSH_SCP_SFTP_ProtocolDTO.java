@@ -1,4 +1,4 @@
-package com.company.airbyte.dto.source.common;
+package com.company.airbyte.dto.source.file;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
 

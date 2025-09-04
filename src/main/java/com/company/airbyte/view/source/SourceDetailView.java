@@ -4,6 +4,7 @@ import com.airbyte.api.models.shared.SourcePostgresSSLModes;
 import com.airbyte.api.models.shared.SourceResponse;
 import com.company.airbyte.dto.source.SourceDTO;
 import com.company.airbyte.dto.source.SourceDatabaseDTO;
+import com.company.airbyte.dto.source.file.FileFormatType;
 import com.company.airbyte.dto.source.file.SourceFileDTO;
 import com.company.airbyte.dto.source.postgres.SourcePostgresDTO;
 import com.company.airbyte.dto.source.common.SourceSSHTunnelMethod;
@@ -17,11 +18,17 @@ import com.company.airbyte.service.AirbyteService;
 import com.company.airbyte.view.main.MainView;
 import com.company.airbyte.view.source.fragment.SourceDatabaseFragment;
 import com.company.airbyte.view.source.fragment.SourceFileFragment;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.Metadata;
 import io.jmix.flowui.Fragments;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.UiComponents;
+import io.jmix.flowui.component.textfield.TypedTextField;
+import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +60,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
     private Notifications notifications;
 
     private SourceFileFragment sourceFileFragment;
+    @Autowired
+    private UiComponents uiComponents;
 
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
@@ -95,6 +104,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
                 }
                 case FILE: {
                     SourceFileDTO file = metadata.create(SourceFileDTO.class);
+                    source.setName("File (CSV, JSON, Excel, Feather, Parquet)");
+                    file.setFormat(FileFormatType.CSV);
                     source.setConfiguration(file);
                     break;
                 }
@@ -203,5 +214,6 @@ public class SourceDetailView extends StandardDetailView<Source> {
             }
         }
     }
+
 
 }

@@ -9,7 +9,7 @@ public enum StorageProviderType implements EnumClass<String> {
     HTTPS("HTTPS"),
     GCS("GCS"),
     S3("S3"),
-    AZ_BLOB("AzBlob"),
+    AZ_BLOB("AZ_BLOB"),
     SSH("SSH"),
     SCP("SCP"),
     SFTP("SFTP"),

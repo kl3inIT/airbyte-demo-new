@@ -22,6 +22,8 @@ public class SourceFileDTO extends SourceDTO {
 
     private String url;
 
+
+
     public StorageProviderType getProvider() {
         return provider == null ? null : StorageProviderType.fromId(provider);
     }
