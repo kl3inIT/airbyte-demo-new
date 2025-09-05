@@ -14,6 +14,7 @@ import com.vaadin.flow.router.Route;
 import io.jmix.core.Metadata;
 import io.jmix.flowui.Fragments;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,6 +44,9 @@ public class DestinationDetailView extends StandardDetailView<Destination> {
     @Autowired
     private Notifications notifications;
 
+    @ViewComponent
+    private InstanceContainer<DestinationS3DTO> destinationS3dc;
+
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
         requestedType = event.getQueryParameters()
@@ -71,10 +75,11 @@ public class DestinationDetailView extends StandardDetailView<Destination> {
 
             switch (requestedType) {
                 case FILE: {
-                    DestinationS3DTO s3 = metadata.create(DestinationS3DTO.class);
+                    DestinationS3DTO destinationS3 = metadata.create(DestinationS3DTO.class);
+                    destinationS3dc.setItem(destinationS3);
                     destination.setName("S3");
                     destination.setDestinationType(DestinationType.FILE);
-                    destination.setConfiguration(s3);
+                    destination.setConfiguration(destinationS3);
                     break;
                 }
                 case DATABASE: {
@@ -97,7 +102,22 @@ public class DestinationDetailView extends StandardDetailView<Destination> {
             switch (destinationType) {
                 case FILE: {
                     destinationS3Fragment = fragments.create(this, DestinationS3Fragment.class);
-                    DestinationS3DTO destinationS3DTO = (DestinationS3DTO) getEditedEntity().getConfiguration();
+
+                    DestinationS3DTO destinationS3DTO =
+                            (getEditedEntity().getConfiguration() instanceof DestinationS3DTO)
+                                    ? (DestinationS3DTO) getEditedEntity().getConfiguration()
+                                    : null;
+                    if (destinationS3DTO == null) {
+                        destinationS3DTO = destinationS3dc.getItemOrNull();
+                        if (destinationS3DTO == null) {
+                            destinationS3DTO = metadata.create(DestinationS3DTO.class);
+                        }
+                        getEditedEntity().setConfiguration(destinationS3DTO);
+                    }
+                    if (destinationS3dc.getItemOrNull() != destinationS3DTO) {
+                        destinationS3dc.setItem(destinationS3DTO);
+                    }
+
                     destinationS3Fragment.setItem(destinationS3DTO);
                     destinationDetailVbox.add(destinationS3Fragment);
                     break;
@@ -116,12 +136,14 @@ public class DestinationDetailView extends StandardDetailView<Destination> {
         if (destinationType != null) {
             switch (destinationType) {
                 case FILE: {
-//                    DestinationS3DTO destinationS3Dto = destinationS3Fragment.getItem();
-//                    destination.setConfiguration(destinationS3Dto);
-
                     try {
+                        DestinationS3DTO current = destinationS3dc.getItemOrNull();
+                        if (current != null && destination.getConfiguration() != current) {
+                            destination.setConfiguration(current);
+                        }
+
+                        // Airbyte API call đang để comment cho bạn debug UI
 //                        DestinationResponse resp = airbyteService.upsertDestinationOnAirbyte(destination);
-//
 //                        if (resp.destinationId() != null) {
 //                            destination.setDestinationId(UUID.fromString(resp.destinationId()));
 //                        }
@@ -130,11 +152,11 @@ public class DestinationDetailView extends StandardDetailView<Destination> {
 //                        }
 
                         destination.setDataFormat(DataFormat.TABLE);
-
                         getViewData().getDataContext().setModified(destination, true);
 
                     } catch (Exception ex) {
-                        event.preventSave();
+                        // Giữ nguyên ý đồ của bạn: không preventSave, chỉ cảnh báo
+//                        event.preventSave();
                         notifications.create("Airbyte create destination failed")
                                 .withType(Notifications.Type.ERROR).show();
                     }

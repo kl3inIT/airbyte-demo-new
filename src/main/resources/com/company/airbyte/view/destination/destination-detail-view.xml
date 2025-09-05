@@ -8,6 +8,9 @@
             <fetchPlan extends="_base"/>
             <loader id="destinationDl"/>
         </instance>
+        <instance id="destinationS3dc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3DTO"
+        />
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -23,12 +26,12 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="nameField" property="name"/>
-            <select id="destinationTypeField" property="destinationType"/>
+            <textField id="destinationTypeField" property="destinationType" readOnly="true"/>
         </formLayout>
-        
+
         <vbox id="destinationDetailVbox" width="100%" spacing="false" margin="false" padding="false">
         </vbox>
-        
+
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>

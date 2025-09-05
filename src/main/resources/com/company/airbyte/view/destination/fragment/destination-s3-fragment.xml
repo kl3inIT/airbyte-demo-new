@@ -1,12 +1,208 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
-    <data>
-        <instance id="destinationS3Dc" class="com.company.airbyte.dto.destination.s3.DestinationS3DTO">
-        </instance>
 
+    <data>
+        <!-- DTO chính, nhận từ màn cha -->
+        <instance id="destinationS3dc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3DTO"
+                  provided="true"/>
+
+        <!-- DTO con theo Output Format -->
+        <instance id="csvDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3CSVCommaSeparatedValuesDTO"/>
+        <instance id="jsonlDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3JSONLinesNewlineDelimitedJSONDTO"/>
+        <instance id="parquetDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3ParquetColumnarStorageDTO"/>
+        <instance id="avroDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3AvroApacheAvroDTO"/>
+
+        <!-- Avro codec-specific DTOs -->
+        <instance id="avroDeflateDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3AvroDeflateDTO"/>
+        <instance id="avroXzDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3AvroXzDTO"/>
+        <instance id="avroZstdDc"
+                  class="com.company.airbyte.dto.destination.s3.DestinationS3AvroZstandardDTO"/>
     </data>
+
     <content>
-        <vbox id="root">
+        <vbox id="root" width="100%" padding="false" spacing="true" margin="false">
+
+            <h3 text="msg://com.company.airbyte.view.destination.fragment/destinationS3.title"/>
+
+            <!-- Thông tin cơ bản -->
+            <formLayout id="baseForm" dataContainer="destinationS3dc" width="100%">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+
+                <textField property="accessKeyId"
+                           label="msg://com.company.airbyte.view.destination.fragment/destinationS3.accessKeyIdLabel"
+                           placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.accessKeyIdPlaceholder"/>
+                <passwordField property="secretAccessKey"
+                               label="msg://com.company.airbyte.view.destination.fragment/destinationS3.secretAccessKeyLabel"
+                               placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.secretAccessKeyPlaceholder"/>
+
+                <textField property="s3BucketName"
+                           label="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketNameLabel"
+                           placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketNamePlaceholder"
+                           required="true"
+                           requiredMessage="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketNameRequired"/>
+
+                <!-- Bucket path KHÔNG bắt buộc theo UI bạn chụp -->
+                <textField property="s3BucketPath"
+                           label="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketPathLabel"
+                           placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketPathPlaceholder"/>
+
+                <comboBox property="s3BucketRegion"
+                          label="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketRegionLabel"
+                          placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketRegionPlaceholder"
+                          required="true"
+                          requiredMessage="msg://com.company.airbyte.view.destination.fragment/destinationS3.bucketRegionRequired"/>
+
+                <!-- Dùng 'format' thay vì 'outputFormat' -->
+                <comboBox id="formatField"
+                          property="format"
+                          label="msg://com.company.airbyte.view.destination.fragment/destinationS3.formatLabel"
+                          placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.formatPlaceholder"
+                          required="true"
+                          requiredMessage="msg://com.company.airbyte.view.destination.fragment/destinationS3.formatRequired"/>
+            </formLayout>
+
+            <!-- Tùy chọn -->
+            <details summaryText="msg://com.company.airbyte.view.destination.fragment/destinationS3.optionalSectionTitle" width="100%">
+                <formLayout dataContainer="destinationS3dc" width="100%">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+
+                    <textField property="roleArn"
+                               label="msg://com.company.airbyte.view.destination.fragment/destinationS3.roleArnLabel"
+                               placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.roleArnPlaceholder"/>
+
+                    <textField property="s3Endpoint"
+                               label="msg://com.company.airbyte.view.destination.fragment/destinationS3.endpointLabel"
+                               placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.endpointPlaceholder"/>
+
+                    <textField property="s3PathFormat"
+                               label="msg://com.company.airbyte.view.destination.fragment/destinationS3.pathFormatLabel"
+                               placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.pathFormatPlaceholder"/>
+
+                    <textField property="fileNamePattern"
+                               label="msg://com.company.airbyte.view.destination.fragment/destinationS3.fileNamePatternLabel"
+                               placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.fileNamePatternPlaceholder"/>
+                </formLayout>
+            </details>
+
+            <!-- Cấu hình theo Output Format -->
+            <vbox id="formatFormsBox" width="100%" spacing="true" margin="false">
+
+                <!-- CSV: chỉ compression + flattening -->
+                <formLayout id="csvForm" dataContainer="csvDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+                    <h4 text="msg://com.company.airbyte.view.destination.fragment/destinationS3.csvConfigurationTitle"/>
+                    <comboBox property="compression"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.csv.compressionLabel"/>
+                    <comboBox property="flattening"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.csv.flatteningLabel"/>
+                </formLayout>
+
+                <!-- JSON Lines: compression + flattening -->
+                <formLayout id="jsonlForm" dataContainer="jsonlDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+                    <h4 text="msg://com.company.airbyte.view.destination.fragment/destinationS3.jsonLinesConfigurationTitle"/>
+                    <comboBox property="compression"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.jsonl.compressionLabel"/>
+                    <comboBox property="flattening"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.jsonl.flatteningLabel"/>
+                </formLayout>
+
+                <!-- Parquet -->
+                <formLayout id="parquetForm" dataContainer="parquetDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+                    <h4 text="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquetConfigurationTitle"/>
+                    <comboBox property="compressionCodec"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquet.compressionCodecLabel"/>
+                    <integerField property="blockSizeMb"
+                                  label="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquet.blockSizeLabel"/>
+                    <integerField property="maxPaddingSizeMb"
+                                  label="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquet.maxPaddingLabel"/>
+                    <integerField property="pageSizeKb"
+                                  label="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquet.pageSizeLabel"/>
+                    <integerField property="dictionaryPageSizeKb"
+                                  label="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquet.dictionaryPageSizeLabel"/>
+                    <switch property="dictionaryEncoding"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.parquet.dictionaryEncodingLabel"/>
+                </formLayout>
+
+                <!-- Avro -->
+                <formLayout id="avroForm" dataContainer="avroDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+                    <h4 text="msg://com.company.airbyte.view.destination.fragment/destinationS3.avroConfigurationTitle"/>
+
+                    <!-- Chọn codec -->
+                    <comboBox id="avroCodecField"
+                              property="codec"
+                              label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.codecLabel"/>
+
+                    <!-- vùng form con cho codec -->
+                    <vbox id="avroCodecFormsBox" width="100%" spacing="true" margin="false">
+
+                        <!-- Deflate -->
+                        <formLayout id="avroDeflateForm" dataContainer="avroDeflateDc" width="100%" visible="false">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                                <responsiveStep minWidth="40em" columns="2"/>
+                            </responsiveSteps>
+                            <h5 text="Avro Deflate"/>
+                            <integerField property="compressionLevel"
+                                          label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.deflateLevelLabel"/>
+                        </formLayout>
+
+                        <!-- XZ -->
+                        <formLayout id="avroXzForm" dataContainer="avroXzDc" width="100%" visible="false">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                                <responsiveStep minWidth="40em" columns="2"/>
+                            </responsiveSteps>
+                            <h5 text="Avro XZ"/>
+                            <integerField property="compressionLevel"
+                                          label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.xzLevelLabel"/>
+                        </formLayout>
+
+                        <!-- Zstandard -->
+                        <formLayout id="avroZstdForm" dataContainer="avroZstdDc" width="100%" visible="false">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                            </responsiveSteps>
+                            <h5 text="Avro Zstandard"/>
+                            <textField property="compressionLevel">
+                                       label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.zstdLevelLabel"
+                                       placeholder="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.zstdLevelPlaceholder"/>
+
+                            </textField>
+                            <switch property="includeChecksum"
+                                      label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.zstdChecksumLabel"/>
+                        </formLayout>
+
+                    </vbox>
+                </formLayout>
+
+            </vbox>
         </vbox>
     </content>
 </fragment>

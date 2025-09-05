@@ -5,10 +5,6 @@ import io.jmix.core.metamodel.annotation.JmixEntity;
 @JmixEntity
 public class DestinationS3ParquetColumnarStorageDTO extends DestinationS3OutputFormat {
 
-    public void setCompressionCodec(String compressionCodec) {
-        this.compressionCodec = compressionCodec;
-    }
-
     private Long blockSizeMb;
 
     private String compressionCodec;
