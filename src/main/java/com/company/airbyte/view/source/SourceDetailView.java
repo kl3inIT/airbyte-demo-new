@@ -136,16 +136,7 @@ public class SourceDetailView extends StandardDetailView<Source> {
                 }
                 case FILE: {
                     sourceFileFragment = fragments.create(this, SourceFileFragment.class);
-
-                    SourceDTO cfg = getEditedEntity().getConfiguration();
-                    SourceFileDTO sourceFileDTO;
-                    if (cfg instanceof SourceFileDTO) {
-                        sourceFileDTO = (SourceFileDTO) cfg;
-                    } else {
-                        sourceFileDTO = metadata.create(SourceFileDTO.class);
-                        getEditedEntity().setConfiguration(sourceFileDTO);
-                    }
-
+                    SourceFileDTO sourceFileDTO = (SourceFileDTO) getEditedEntity().getConfiguration();
                     sourceFileFragment.setItem(sourceFileDTO);
                     sourceDetailVbox.add(sourceFileFragment);
                     break;
@@ -206,9 +197,12 @@ public class SourceDetailView extends StandardDetailView<Source> {
                         getViewData().getDataContext().setModified(source, true);
 
                     } catch (Exception ex) {
-                        event.preventSave();
+//                        event.preventSave();
                         notifications.create("Airbyte create source failed")
                                 .withType(Notifications.Type.ERROR).show();
+
+                        source.setDataFormat(DataFormat.TABLE);
+                        getViewData().getDataContext().setModified(source, true);
                     }
                     break;
             }

@@ -52,7 +52,6 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
     @Autowired
     private Metadata metadata;
 
-    @Override
     public void setItem(SourceFileDTO item) {
         super.setItem(item);
         sourceFileDc.setItem(item);
