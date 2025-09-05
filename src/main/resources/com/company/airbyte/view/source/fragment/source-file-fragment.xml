@@ -1,7 +1,203 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <fragment xmlns="http://jmix.io/schema/flowui/fragment">
+    <data>
+        <!-- Lấy item từ màn cha -->
+        <instance id="sourceFileDc"
+                  class="com.company.airbyte.dto.source.file.SourceFileDTO"
+                  provided="true"/>
+
+        <!-- Provider DTO containers -->
+        <instance id="s3Dc"
+                  class="com.company.airbyte.dto.source.file.S3AmazonWebServicesDTO"/>
+        <instance id="gcsDc"
+                  class="com.company.airbyte.dto.source.file.GCSGoogleCloudStorageDTO"/>
+        <instance id="azBlobDc"
+                  class="com.company.airbyte.dto.source.file.AzBlobAzureBlobStorageDTO"/>
+        <instance id="httpsDc"
+                  class="com.company.airbyte.dto.source.file.HTTPSPublicWebDTO"/>
+        <instance id="sshLikeDc"
+                  class="com.company.airbyte.dto.source.file.SSH_SCP_SFTP_ProtocolDTO"/>
+    </data>
+
     <content>
-        <vbox id="root">
+        <vbox id="root" width="100%" padding="false" spacing="false" margin="false"
+              expand="providerFormsBox">
+
+            <!-- Cấu hình chi tiết - File -->
+            <h3 text="msg://sourceFileFragment.title"/>
+            <formLayout id="detailForm" dataContainer="sourceFileDc" width="100%">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+
+                <textField id="datasetNameField" property="datasetName"
+                           label="msg://sourceFileFragment.datasetNameLabel"
+                           placeholder="msg://sourceFileFragment.datasetNamePlaceholder"
+                           required="true"
+                           requiredMessage="msg://sourceFileFragment.datasetNameRequired">
+                    <tooltip text="msg://sourceFileFragment.datasetNameTooltip"/>
+                </textField>
+
+                <comboBox id="formatField"
+                          property="format"
+                          label="msg://sourceFileFragment.formatLabel"
+                          placeholder="msg://sourceFileFragment.formatPlaceholder"
+                          required="true"
+                          requiredMessage="msg://sourceFileFragment.formatRequired">
+                    <tooltip text="msg://sourceFileFragment.fileFormatTooltip"/>
+                </comboBox>
+
+                <comboBox property="provider"
+                          label="msg://sourceFileFragment.providerLabel"
+                          placeholder="msg://sourceFileFragment.providerPlaceholder"
+                          required="true"
+                          requiredMessage="msg://sourceFileFragment.providerRequired">
+                    <tooltip text="msg://sourceFileFragment.storageProviderTooltip"/>
+                </comboBox>
+
+
+                <textField property="readerOptions"
+                           label="msg://sourceFileFragment.readerOptionsLabel"
+                           placeholder="msg://sourceFileFragment.readerOptionsPlaceholder">
+                    <tooltip text="msg://sourceFileFragment.readerOptionsTooltip"/>
+                </textField>
+
+            </formLayout>
+
+            <!-- Khối form con theo provider -->
+            <vbox id="providerFormsBox" width="100%" spacing="false" margin="false" padding="false"
+                  classNames="ssl-cert-box" visible="false" css="margin-top: 16px">
+
+                <!-- S3 -->
+                <formLayout id="s3Form" dataContainer="s3Dc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.s3.title"/>
+
+                    <details summaryText="Trường tuỳ chọn" width="100%">
+                        <vbox width="100%" spacing="false" padding="false" margin="false">
+                            <textField property="awsAccessKeyId"
+                                       label="msg://sourceFileFragment.s3.awsAccessKeyLabel"
+                                       placeholder="msg://sourceFileFragment.s3.awsAccessKeyPlaceholder"
+                                       width="100%">
+                                <tooltip text="msg://sourceFileFragment.awsAccessKeyIdTooltip"/>
+                            </textField>
+                            <passwordField property="awsSecretAccessKey"
+                                           label="msg://sourceFileFragment.s3.awsSecretKeyLabel"
+                                           placeholder="msg://sourceFileFragment.s3.awsSecretKeyPlaceholder"
+                                           width="100%">
+                                <tooltip text="msg://sourceFileFragment.awsSecretAccessKeyTooltip"/>
+                            </passwordField>
+                        </vbox>
+                    </details>
+                </formLayout>
+
+                <!-- GCS -->
+                <formLayout id="gcsForm" dataContainer="gcsDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.gcs.title"/>
+                    <details summaryText="Trường tuỳ chọn" width="100%">
+                        <textArea property="serviceAccountJson"
+                                  label="msg://sourceFileFragment.gcs.serviceAccountLabel"
+                                  placeholder="msg://sourceFileFragment.gcs.serviceAccountPlaceholder"
+                                  width="100%">
+                            <tooltip text="msg://sourceFileFragment.serviceAccountJsonTooltip"/>
+                        </textArea>
+                    </details>
+                </formLayout>
+
+                <!-- Azure Blob -->
+                <formLayout id="azBlobForm" dataContainer="azBlobDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.az.title"/>
+
+                    <textField property="storageAccount"
+                               label="msg://sourceFileFragment.az.storageAccountLabel"
+                               placeholder="msg://sourceFileFragment.az.storageAccountPlaceholder">
+                        <tooltip text="msg://sourceFileFragment.storageAccountTooltip"/>
+                    </textField>
+
+                    <details summaryText="Trường tuỳ chọn" width="100%">
+                        <vbox width="100%" spacing="false" padding="false" margin="false">
+                            <textField property="sasToken"
+                                       label="msg://sourceFileFragment.az.sasTokenLabel"
+                                       placeholder="msg://sourceFileFragment.az.sasTokenPlaceholder"
+                                       width="100%">
+                                <tooltip text="msg://sourceFileFragment.sasTokenTooltip"/>
+                            </textField>
+                            <passwordField property="sharedKey"
+                                           label="msg://sourceFileFragment.az.sharedKeyLabel"
+                                           placeholder="msg://sourceFileFragment.az.sharedKeyPlaceholder"
+                                           width="100%">
+                                <tooltip text="msg://sourceFileFragment.sharedKeyTooltip"/>
+                            </passwordField>
+                        </vbox>
+                    </details>
+                </formLayout>
+
+                <!-- HTTPS Public -->
+                <formLayout id="httpsForm" dataContainer="httpsDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.https.title"/>
+
+                    <details summaryText="Trường tuỳ chọn" width="100%">
+                        <switch property="userAgent"
+                                label="msg://sourceFileFragment.https.userAgentLabel"
+                                width="100%">
+                            <tooltip text="msg://sourceFileFragment.userAgentTooltip"/>
+                        </switch>
+                    </details>
+                </formLayout>
+
+                <!-- SSH / SCP / SFTP -->
+                <formLayout id="sshLikeForm" dataContainer="sshLikeDc" width="100%" visible="false">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                    </responsiveSteps>
+
+                    <h4 text="msg://sourceFileFragment.ssh.title"/>
+                    <textField property="host"
+                               label="msg://sourceFileFragment.ssh.hostLabel"
+                               placeholder="msg://sourceFileFragment.ssh.hostPlaceholder"
+                               required="true"
+                               requiredMessage="msg://sourceFileFragment.ssh.hostRequired"/>
+                    <textField property="user"
+                               label="msg://sourceFileFragment.ssh.userLabel"
+                               placeholder="msg://sourceFileFragment.ssh.userPlaceholder"/>
+                    <details summaryText="Trường tuỳ chọn" width="100%">
+                        <vbox width="100%" spacing="false" padding="false" margin="false">
+                            <passwordField property="password"
+                                           label="msg://sourceFileFragment.ssh.passwordLabel"
+                                           placeholder="msg://sourceFileFragment.ssh.passwordPlaceholder"
+                                           width="100%"/>
+                            <textField property="port"
+                                       label="msg://sourceFileFragment.ssh.portLabel"
+                                       placeholder="msg://sourceFileFragment.ssh.portPlaceholder"
+                                       width="100%"/>
+                        </vbox>
+                    </details>
+                </formLayout>
+            </vbox>
+
+            <textField id="urlField" property="url"
+                       dataContainer="sourceFileDc"
+                       label="msg://sourceFileFragment.urlLabel"
+                       placeholder="msg://sourceFileFragment.urlPlaceholder"
+                       width="100%">
+                <tooltip text="msg://sourceFileFragment.urlTooltip"/>
+            </textField>
         </vbox>
     </content>
 </fragment>
