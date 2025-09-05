@@ -23,13 +23,12 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="nameField" property="name"/>
-            <textField id="destinationIdField" property="destinationId"/>
-            <textField id="definitionIdField" property="definitionId"/>
-            <textField id="workspaceIdField" property="workspaceId"/>
             <select id="destinationTypeField" property="destinationType"/>
-            <select id="dataFormatField" property="dataFormat"/>
-            <textField id="descriptionField" property="description"/>
         </formLayout>
+        
+        <vbox id="destinationDetailVbox" width="100%" spacing="false" margin="false" padding="false">
+        </vbox>
+        
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>
