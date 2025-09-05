@@ -1,7 +1,13 @@
 .ssl-cert-box {
     background-color: #f5f5f5;
+    border-radius: 6px;
+    padding: 12px;
 }
 
 .green-box {
     background-color: #f5ffed;
+}
+
+.destination-settings-box {
+    background-color: #f5f5f5;
 }

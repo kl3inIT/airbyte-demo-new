@@ -107,11 +107,10 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
     @Subscribe(id = "sourceFileDc", target = Target.DATA_CONTAINER)
     public void onRootPropertyChange(InstanceContainer.ItemPropertyChangeEvent<SourceFileDTO> e) {
         if ("provider".equals(e.getProperty())) {
-            StorageProviderType provider = null;
-            if (e.getValue() != null) {
-                provider = StorageProviderType.fromId(String.valueOf(e.getValue()));
-            }
-            visibleFieldsByProvider(provider, true);
+            StorageProviderType newProvider = (StorageProviderType) e.getValue();
+            StorageProviderType oldProvider = (StorageProviderType) e.getPrevValue();
+            boolean changed = newProvider != oldProvider;
+            visibleFieldsByProvider(newProvider, changed);
         }
     }
 
@@ -120,10 +119,11 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
         providerFormsBox.setVisible(false);
 
         if (provider == null) return;
+
         if (shouldReset) {
-            resetSourceExceptProvider();
+            resetProviderSpecific();
         }
-        // đảm bảo container con đã có item và gắn vào root
+
         initializeChildContainers(sourceFileDc.getItemOrNull());
 
         providerFormsBox.setVisible(true);
@@ -148,19 +148,18 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
         }
     }
 
-    private void resetSourceExceptProvider() {
-        SourceFileDTO cur = sourceFileDc.getItemOrNull();
-        if (cur != null) {
-            StorageProviderType type = cur.getProvider();
-            SourceFileDTO fresh = metadata.create(SourceFileDTO.class);
-            fresh.setProvider(type);
-            sourceFileDc.setItem(fresh);
-
-            // Sau khi reset, khởi tạo lại container con và gắn storageProvider tương ứng
-            initializeChildContainers(fresh);
+    private void resetProviderSpecific() {
+        SourceFileDTO root = sourceFileDc.getItemOrNull();
+        if (root != null) {
+            root.setStorageProvider(null);
         }
-    }
 
+        s3Dc.setItem(metadata.create(S3AmazonWebServicesDTO.class));
+        gcsDc.setItem(metadata.create(GCSGoogleCloudStorageDTO.class));
+        azBlobDc.setItem(metadata.create(AzBlobAzureBlobStorageDTO.class));
+        httpsDc.setItem(metadata.create(HTTPSPublicWebDTO.class));
+        sshLikeDc.setItem(metadata.create(SSH_SCP_SFTP_ProtocolDTO.class));
+    }
 
     private void hideAllProviderForms() {
         s3Form.setVisible(false);

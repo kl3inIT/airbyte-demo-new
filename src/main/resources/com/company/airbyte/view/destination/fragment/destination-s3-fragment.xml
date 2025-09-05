@@ -75,7 +75,7 @@
             <vbox id="formatFormsBox" width="100%" spacing="false" margin="false">
 
                 <!-- CSV: chỉ compression + flattening -->
-                <formLayout id="csvForm" dataContainer="csvDc" width="100%" visible="false" classNames="ssl-cert-box">
+                <formLayout id="csvForm" dataContainer="csvDc" width="100%" visible="false" classNames="destination-settings-box">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
@@ -94,7 +94,7 @@
 
                 <!-- JSON Lines: compression + flattening -->
                 <formLayout id="jsonlForm" dataContainer="jsonlDc" width="100%" visible="false"
-                            classNames="ssl-cert-box">
+                            classNames="destination-settings-box">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
@@ -113,7 +113,7 @@
 
                 <!-- Parquet -->
                 <formLayout id="parquetForm" dataContainer="parquetDc" width="100%" visible="false"
-                            classNames="ssl-cert-box">
+                            classNames="destination-settings-box">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
@@ -142,7 +142,7 @@
                 </formLayout>
 
                 <!-- Avro -->
-                <formLayout id="avroForm" dataContainer="avroDc" width="100%" visible="false" classNames="ssl-cert-box">
+                <formLayout id="avroForm" dataContainer="avroDc" width="100%" visible="false" classNames="destination-settings-box">
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
