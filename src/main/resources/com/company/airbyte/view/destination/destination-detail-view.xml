@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://destinationDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="destinationDc"
+                  class="com.company.airbyte.entity.Destination">
+            <fetchPlan extends="_base"/>
+            <loader id="destinationDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="destinationDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <select id="destinationTypeField" property="destinationType"/>
+        </formLayout>
+        
+        <vbox id="destinationDetailVbox" width="100%" spacing="false" margin="false" padding="false">
+        </vbox>
+        
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>
