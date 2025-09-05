@@ -1,9 +1,6 @@
 package com.company.airbyte.dto.source.file;
 
 
-import com.airbyte.api.models.shared.FileFormat;
-import com.airbyte.api.models.shared.StorageProvider;
-
 import com.company.airbyte.dto.source.SourceDTO;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
@@ -22,50 +19,14 @@ public class SourceFileDTO extends SourceDTO {
 
     private String url;
 
-    private S3AmazonWebServicesDTO s3;
-    private GCSGoogleCloudStorageDTO gcs;
-    private AzBlobAzureBlobStorageDTO azBlob;
-    private HTTPSPublicWebDTO https;
-    private SSH_SCP_SFTP_ProtocolDTO sshLike;
+    private SourceFileStorageProviderDTO storageProvider;
 
-    public S3AmazonWebServicesDTO getS3() {
-        return s3;
+    public SourceFileStorageProviderDTO getStorageProvider() {
+        return storageProvider;
     }
 
-    public void setS3(S3AmazonWebServicesDTO s3) {
-        this.s3 = s3;
-    }
-
-    public GCSGoogleCloudStorageDTO getGcs() {
-        return gcs;
-    }
-
-    public void setGcs(GCSGoogleCloudStorageDTO gcs) {
-        this.gcs = gcs;
-    }
-
-    public AzBlobAzureBlobStorageDTO getAzBlob() {
-        return azBlob;
-    }
-
-    public void setAzBlob(AzBlobAzureBlobStorageDTO azBlob) {
-        this.azBlob = azBlob;
-    }
-
-    public HTTPSPublicWebDTO getHttps() {
-        return https;
-    }
-
-    public void setHttps(HTTPSPublicWebDTO https) {
-        this.https = https;
-    }
-
-    public SSH_SCP_SFTP_ProtocolDTO getSshLike() {
-        return sshLike;
-    }
-
-    public void setSshLike(SSH_SCP_SFTP_ProtocolDTO sshLike) {
-        this.sshLike = sshLike;
+    public void setStorageProvider(SourceFileStorageProviderDTO storageProvider) {
+        this.storageProvider = storageProvider;
     }
 
     public StorageProviderType getProvider() {
@@ -120,18 +81,14 @@ public class SourceFileDTO extends SourceDTO {
                 && Objects.equals(provider, that.provider)
                 && Objects.equals(readerOptions, that.readerOptions)
                 && Objects.equals(url, that.url)
-                && Objects.equals(s3, that.s3)
-                && Objects.equals(gcs, that.gcs)
-                && Objects.equals(azBlob, that.azBlob)
-                && Objects.equals(https, that.https)
-                && Objects.equals(sshLike, that.sshLike);
+                && Objects.equals(storageProvider, that.storageProvider);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
                 super.hashCode(),
-                datasetName, format, provider, readerOptions, url, s3, gcs, azBlob, https, sshLike
+                datasetName, format, provider, readerOptions, url, storageProvider
         );
     }
 }

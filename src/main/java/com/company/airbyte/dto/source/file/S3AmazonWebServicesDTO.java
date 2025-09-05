@@ -1,17 +1,11 @@
 package com.company.airbyte.dto.source.file;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import jakarta.persistence.Entity;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.Objects;
 
 @JmixEntity
-public class S3AmazonWebServicesDTO {
+public class S3AmazonWebServicesDTO extends SourceFileStorageProviderDTO {
 
     private String awsAccessKeyId;
 
@@ -31,5 +25,20 @@ public class S3AmazonWebServicesDTO {
 
     public void setAwsSecretAccessKey(String awsSecretAccessKey) {
         this.awsSecretAccessKey = awsSecretAccessKey;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        S3AmazonWebServicesDTO that = (S3AmazonWebServicesDTO) o;
+        return Objects.equals(awsAccessKeyId, that.awsAccessKeyId)
+                && Objects.equals(awsSecretAccessKey, that.awsSecretAccessKey);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), awsAccessKeyId, awsSecretAccessKey);
     }
 }

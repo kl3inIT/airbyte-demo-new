@@ -31,6 +31,8 @@ import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.view.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
@@ -60,8 +62,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
     private Notifications notifications;
 
     private SourceFileFragment sourceFileFragment;
-    @Autowired
-    private UiComponents uiComponents;
+
+    private static final Logger logger = LoggerFactory.getLogger(SourceDetailView.class);
 
     @Subscribe
     public void onQueryParametersChange(QueryParametersChangeEvent event) {
@@ -171,7 +173,8 @@ public class SourceDetailView extends StandardDetailView<Source> {
 
                     } catch (Exception ex) {
                         event.preventSave();
-                        notifications.create("Airbyte create destination failed")
+                        logger.error("Airbyte create source (DATABASE) failed", ex);
+                        notifications.create("Airbyte create source failed: " + ex.getMessage())
                                 .withType(Notifications.Type.ERROR).show();
                     }
                     break;
@@ -197,12 +200,11 @@ public class SourceDetailView extends StandardDetailView<Source> {
                         getViewData().getDataContext().setModified(source, true);
 
                     } catch (Exception ex) {
-//                        event.preventSave();
-                        notifications.create("Airbyte create source failed")
+                        event.preventSave();
+                        logger.error("Airbyte create source (FILE) failed", ex);
+                        notifications.create("Airbyte create source failed: " + ex.getMessage())
                                 .withType(Notifications.Type.ERROR).show();
 
-                        source.setDataFormat(DataFormat.TABLE);
-                        getViewData().getDataContext().setModified(source, true);
                     }
                     break;
             }

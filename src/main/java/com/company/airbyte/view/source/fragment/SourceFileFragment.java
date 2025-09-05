@@ -73,26 +73,32 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
                     if (s3Dc.getItemOrNull() == null) {
                         s3Dc.setItem(metadata.create(S3AmazonWebServicesDTO.class));
                     }
+                    // Gắn storageProvider vào root để serialize đúng cấu trúc
+                    item.setStorageProvider(s3Dc.getItem());
                     break;
                 case GCS:
                     if (gcsDc.getItemOrNull() == null) {
                         gcsDc.setItem(metadata.create(GCSGoogleCloudStorageDTO.class));
                     }
+                    item.setStorageProvider(gcsDc.getItem());
                     break;
                 case AZ_BLOB:
                     if (azBlobDc.getItemOrNull() == null) {
                         azBlobDc.setItem(metadata.create(AzBlobAzureBlobStorageDTO.class));
                     }
+                    item.setStorageProvider(azBlobDc.getItem());
                     break;
                 case HTTPS:
                     if (httpsDc.getItemOrNull() == null) {
                         httpsDc.setItem(metadata.create(HTTPSPublicWebDTO.class));
                     }
+                    item.setStorageProvider(httpsDc.getItem());
                     break;
                 case SSH, SFTP, SCP:
                     if (sshLikeDc.getItemOrNull() == null) {
                         sshLikeDc.setItem(metadata.create(SSH_SCP_SFTP_ProtocolDTO.class));
                     }
+                    item.setStorageProvider(sshLikeDc.getItem());
                     break;
             }
         }
@@ -101,7 +107,10 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
     @Subscribe(id = "sourceFileDc", target = Target.DATA_CONTAINER)
     public void onRootPropertyChange(InstanceContainer.ItemPropertyChangeEvent<SourceFileDTO> e) {
         if ("provider".equals(e.getProperty())) {
-            StorageProviderType provider = StorageProviderType.fromId(e.getValue().toString());
+            StorageProviderType provider = null;
+            if (e.getValue() != null) {
+                provider = StorageProviderType.fromId(String.valueOf(e.getValue()));
+            }
             visibleFieldsByProvider(provider, true);
         }
     }
@@ -114,6 +123,7 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
         if (shouldReset) {
             resetSourceExceptProvider();
         }
+        // đảm bảo container con đã có item và gắn vào root
         initializeChildContainers(sourceFileDc.getItemOrNull());
 
         providerFormsBox.setVisible(true);
@@ -146,6 +156,7 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
             fresh.setProvider(type);
             sourceFileDc.setItem(fresh);
 
+            // Sau khi reset, khởi tạo lại container con và gắn storageProvider tương ứng
             initializeChildContainers(fresh);
         }
     }

@@ -1,18 +1,11 @@
 package com.company.airbyte.dto.source.file;
 
-import com.airbyte.api.models.shared.SourceFileSchemasProviderStorage;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import jakarta.persistence.Entity;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.Objects;
 
 @JmixEntity
-public class AzBlobAzureBlobStorageDTO {
+public class AzBlobAzureBlobStorageDTO extends SourceFileStorageProviderDTO {
 
     private String sasToken;
 
@@ -42,5 +35,21 @@ public class AzBlobAzureBlobStorageDTO {
 
     public void setStorageAccount(String storageAccount) {
         this.storageAccount = storageAccount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        AzBlobAzureBlobStorageDTO that = (AzBlobAzureBlobStorageDTO) o;
+        return Objects.equals(sasToken, that.sasToken)
+                && Objects.equals(sharedKey, that.sharedKey)
+                && Objects.equals(storageAccount, that.storageAccount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), sasToken, sharedKey, storageAccount);
     }
 }
