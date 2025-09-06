@@ -72,7 +72,7 @@
             </formLayout>
 
             <!-- Cấu hình theo Output Format -->
-            <vbox id="formatFormsBox" width="100%" spacing="false" margin="false">
+            <vbox id="formatFormsBox" width="100%" spacing="false" margin="false" padding="false">
 
                 <!-- CSV: chỉ compression + flattening -->
                 <formLayout id="csvForm" dataContainer="csvDc" width="100%" visible="false" classNames="destination-settings-box">
@@ -146,7 +146,7 @@
                     <responsiveSteps>
                         <responsiveStep minWidth="0" columns="1"/>
                     </responsiveSteps>
-                    <vbox padding="true" width="100%">
+                    <vbox padding="true" spacing="false" margin="false" width="100%">
                         <h4 text="msg://com.company.airbyte.view.destination.fragment/destinationS3.avroConfigurationTitle"
                             width="100%"/>
 
@@ -166,7 +166,7 @@
                                     <responsiveStep minWidth="0" columns="1"/>
                                 </responsiveSteps>
 
-                                <vbox padding="true" spacing="true" margin="true" width="100%">
+                                <vbox padding="true" spacing="false" margin="false" width="100%">
                                     <h5 text="Avro Deflate" width="100%"/>
                                     <integerField property="compressionLevel"
                                                   label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.deflateLevelLabel"
@@ -181,7 +181,7 @@
                                     <responsiveStep minWidth="0" columns="1"/>
                                 </responsiveSteps>
 
-                                <vbox padding="true" spacing="true" margin="true" width="100%">
+                                <vbox padding="true" spacing="false" margin="false" width="100%">
                                     <h5 text="Avro XZ" width="100%"/>
                                     <integerField property="compressionLevel"
                                                   label="msg://com.company.airbyte.view.destination.fragment/destinationS3.avro.xzLevelLabel"
@@ -195,7 +195,7 @@
                                 <responsiveSteps>
                                     <responsiveStep minWidth="0" columns="1"/>
                                 </responsiveSteps>
-                                <vbox padding="true" spacing="true" margin="true" width="100%">
+                                <vbox padding="true" spacing="false" margin="false" width="100%">
                                     <h5 text="Avro Zstandard" width="100%"/>
                                     <textField property="compressionLevel" width="100%">
                                         <!--                                        -->
