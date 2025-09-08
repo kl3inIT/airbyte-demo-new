@@ -2,6 +2,8 @@ package com.company.airbyte.dto.destination.s3;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
+import java.util.Objects;
+
 
 @JmixEntity
 public class DestinationS3JSONLinesNewlineDelimitedJSONDTO extends DestinationS3OutputFormat{
@@ -24,6 +26,20 @@ public class DestinationS3JSONLinesNewlineDelimitedJSONDTO extends DestinationS3
 
     public void setCompression(DestinationS3CompressionTypeE compression) {
         this.compression = compression == null ? null : compression.getId();
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DestinationS3JSONLinesNewlineDelimitedJSONDTO that = (DestinationS3JSONLinesNewlineDelimitedJSONDTO) o;
+        return Objects.equals(compression, that.compression)
+                && Objects.equals(flattening, that.flattening);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), compression, flattening);
     }
 
 }

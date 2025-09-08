@@ -2,6 +2,8 @@ package com.company.airbyte.dto.destination.s3;
 
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
+import java.util.Objects;
+
 @JmixEntity
 public class DestinationS3ParquetColumnarStorageDTO extends DestinationS3OutputFormat {
 
@@ -63,5 +65,25 @@ public class DestinationS3ParquetColumnarStorageDTO extends DestinationS3OutputF
 
     public void setBlockSizeMb(Long blockSizeMb) {
         this.blockSizeMb = blockSizeMb;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DestinationS3ParquetColumnarStorageDTO that = (DestinationS3ParquetColumnarStorageDTO) o;
+        return Objects.equals(blockSizeMb, that.blockSizeMb)
+                && Objects.equals(compressionCodec, that.compressionCodec)
+                && Objects.equals(dictionaryEncoding, that.dictionaryEncoding)
+                && Objects.equals(dictionaryPageSizeKb, that.dictionaryPageSizeKb)
+                && Objects.equals(maxPaddingSizeMb, that.maxPaddingSizeMb)
+                && Objects.equals(pageSizeKb, that.pageSizeKb);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(),
+                blockSizeMb, compressionCodec, dictionaryEncoding, dictionaryPageSizeKb, maxPaddingSizeMb, pageSizeKb);
     }
 }

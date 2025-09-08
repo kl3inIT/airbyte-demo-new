@@ -5,6 +5,7 @@ import com.company.airbyte.dto.destination.DestinationDTO;
 import com.company.airbyte.entity.DestinationType;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @JmixEntity
@@ -128,4 +129,34 @@ public class DestinationS3DTO extends DestinationDTO {
     public void setDesinationType(DestinationType desinationType) {
         this.desinationType = desinationType == null ? null : desinationType.getId();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        DestinationS3DTO that = (DestinationS3DTO) o;
+        return Objects.equals(desinationType, that.desinationType)
+                && Objects.equals(accessKeyId, that.accessKeyId)
+                && Objects.equals(fileNamePattern, that.fileNamePattern)
+                && Objects.equals(format, that.format)
+                && Objects.equals(roleArn, that.roleArn)
+                && Objects.equals(s3BucketName, that.s3BucketName)
+                && Objects.equals(s3BucketPath, that.s3BucketPath)
+                && Objects.equals(s3BucketRegion, that.s3BucketRegion)
+                && Objects.equals(s3Endpoint, that.s3Endpoint)
+                && Objects.equals(s3PathFormat, that.s3PathFormat)
+                && Objects.equals(secretAccessKey, that.secretAccessKey)
+                && Objects.equals(outputFormat, that.outputFormat);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), desinationType, accessKeyId, fileNamePattern,
+                format, roleArn, s3BucketName, s3BucketPath, s3BucketRegion,
+                s3Endpoint, s3PathFormat, secretAccessKey, outputFormat);
+    }
+
 }
