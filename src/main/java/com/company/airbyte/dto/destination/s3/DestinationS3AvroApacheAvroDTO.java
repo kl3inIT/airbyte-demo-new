@@ -1,6 +1,5 @@
 package com.company.airbyte.dto.destination.s3;
 
-import com.company.airbyte.dto.source.file.S3AmazonWebServicesDTO;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
 import java.util.Objects;
