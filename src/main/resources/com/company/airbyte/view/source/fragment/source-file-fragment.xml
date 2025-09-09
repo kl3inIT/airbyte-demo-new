@@ -128,12 +128,12 @@
 
                     <details summaryText="Trường tuỳ chọn" width="100%">
                         <vbox width="100%" spacing="false" padding="false" margin="false">
-                            <textField property="sasToken"
+                            <passwordField property="sasToken"
                                        label="msg://sourceFileFragment.az.sasTokenLabel"
                                        placeholder="msg://sourceFileFragment.az.sasTokenPlaceholder"
                                        width="100%">
                                 <tooltip text="msg://sourceFileFragment.sasTokenTooltip"/>
-                            </textField>
+                            </passwordField>
                             <passwordField property="sharedKey"
                                            label="msg://sourceFileFragment.az.sharedKeyLabel"
                                            placeholder="msg://sourceFileFragment.az.sharedKeyPlaceholder"

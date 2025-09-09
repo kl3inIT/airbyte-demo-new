@@ -1,12 +1,6 @@
 package com.company.airbyte.view.source.fragment;
 
-import com.company.airbyte.dto.source.file.SSH_SCP_SFTP_ProtocolDTO;
-import com.company.airbyte.dto.source.file.AzBlobAzureBlobStorageDTO;
-import com.company.airbyte.dto.source.file.GCSGoogleCloudStorageDTO;
-import com.company.airbyte.dto.source.file.HTTPSPublicWebDTO;
-import com.company.airbyte.dto.source.file.S3AmazonWebServicesDTO;
-import com.company.airbyte.dto.source.file.SourceFileDTO;
-import com.company.airbyte.dto.source.file.StorageProviderType;
+import com.company.airbyte.dto.source.file.*;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.core.Metadata;
 import io.jmix.flowui.component.formlayout.JmixFormLayout;
@@ -67,13 +61,44 @@ public class SourceFileFragment extends FragmentRenderer<VerticalLayout, SourceF
         if (item == null) return;
 
         StorageProviderType provider = item.getProvider();
+        SourceFileStorageProviderDTO existingProviderDto = item.getStorageProvider();
+
+        if (existingProviderDto != null) {
+            if (existingProviderDto instanceof S3AmazonWebServicesDTO s3) {
+                s3Dc.setItem(s3);
+                if (provider != StorageProviderType.S3) {
+                    item.setProvider(StorageProviderType.S3);
+                }
+            } else if (existingProviderDto instanceof GCSGoogleCloudStorageDTO gcs) {
+                gcsDc.setItem(gcs);
+                if (provider != StorageProviderType.GCS) {
+                    item.setProvider(StorageProviderType.GCS);
+                }
+            } else if (existingProviderDto instanceof AzBlobAzureBlobStorageDTO az) {
+                azBlobDc.setItem(az);
+                if (provider != StorageProviderType.AZ_BLOB) {
+                    item.setProvider(StorageProviderType.AZ_BLOB);
+                }
+            } else if (existingProviderDto instanceof HTTPSPublicWebDTO https) {
+                httpsDc.setItem(https);
+                if (provider != StorageProviderType.HTTPS) {
+                    item.setProvider(StorageProviderType.HTTPS);
+                }
+            } else if (existingProviderDto instanceof SSH_SCP_SFTP_ProtocolDTO sshLike) {
+                sshLikeDc.setItem(sshLike);
+                if (provider != StorageProviderType.SSH && provider != StorageProviderType.SFTP && provider != StorageProviderType.SCP) {
+                    item.setProvider(StorageProviderType.SSH);
+                }
+            }
+            return;
+        }
+
         if (provider != null) {
             switch (provider) {
                 case S3:
                     if (s3Dc.getItemOrNull() == null) {
                         s3Dc.setItem(metadata.create(S3AmazonWebServicesDTO.class));
                     }
-                    // Gắn storageProvider vào root để serialize đúng cấu trúc
                     item.setStorageProvider(s3Dc.getItem());
                     break;
                 case GCS:
